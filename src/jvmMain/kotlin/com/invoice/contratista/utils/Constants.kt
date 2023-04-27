@@ -45,7 +45,7 @@ object Constants {
         Autorizado,
     }
 
-    const val BASE_URL = "http://localhost:8080/"
+    const val BASE_URL = "http://localhost:9191"
     const val AUTHORIZATION = "Authorization"
     const val ID_SCHEDULE = "idSchedule"
     const val ID_NOTE = "idNote"
