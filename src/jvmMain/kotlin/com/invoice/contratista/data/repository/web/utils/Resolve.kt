@@ -14,7 +14,7 @@ class Resolve<T>(
                 webStatus.error("Error inesperado")
                 return
             }
-            if (body!!.status) {
+            if (body.status) {
                 if (body.data == null) {
                     webStatus.error("Error inesperado")
                     return

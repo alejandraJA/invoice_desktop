@@ -20,7 +20,7 @@ class LoginComponent(
     private val repository: SingRepository by inject()
     private val userService: UserService by inject()
 
-    private val isLoggedUser: Boolean
+    val isLoggedUser: Boolean
         get() = userService.isLoggedUser()
 
     suspend fun login(

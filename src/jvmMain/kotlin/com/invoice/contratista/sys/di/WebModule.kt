@@ -3,7 +3,6 @@ package com.invoice.contratista.sys.di
 import com.invoice.contratista.data.repository.web.CustomerRepositoryImp
 import com.invoice.contratista.data.repository.web.ProductRepositoryImp
 import com.invoice.contratista.data.repository.web.SingRepositoryImp
-import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.data.source.web.retrofit.Service
 import com.invoice.contratista.sys.domain.repository.web.CustomerRepository
 import com.invoice.contratista.sys.domain.repository.web.ProductRepository
