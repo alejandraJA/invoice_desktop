@@ -6,11 +6,8 @@ package com.invoice.contratista.ui.custom.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
@@ -40,7 +37,8 @@ fun TextField(
     isRequired: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     counterEnable: Boolean = false,
-    change: OnValueChange
+    change: OnValueChange,
+    externalError: MutableState<String> = mutableStateOf("")
 ) {
     val counterNumber = 0
     var field by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -62,7 +60,7 @@ fun TextField(
             placeholder = if (placeholder.isEmpty()) null else {
                 { Text(text = placeholder) }
             },
-            isError = isRequired && field.text.isEmpty(),
+            isError = isRequired && field.text.isEmpty() || externalError.value.isNotEmpty(),
             leadingIcon = if (icon.isNotEmpty()) {
                 {
                     Icon(
@@ -99,6 +97,14 @@ fun TextField(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(top = 8.dp)
             )
+            if (externalError.value.isNotEmpty()) {
+                Text(
+                    text = externalError.value,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
             Spacer(Modifier.weight(1f))
             if (counterEnable) Text(
                 text = "${field.text.length}/$counterNumber",

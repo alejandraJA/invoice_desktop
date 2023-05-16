@@ -21,16 +21,20 @@ fun AuthenticationScreen() {
     val scope = rememberCoroutineScope()
     val login = LoginComponent()
     val openDialog = rememberSaveable { mutableStateOf(false) }
+    val errorFromApi = rememberSaveable { mutableStateOf("") }
 
     Row {
         Spacer(modifier = Modifier.weight(1f))
-        LoginSection(modifier = ModifierPaddingScreen.weight(1f)) { email, password ->
+        LoginSection(modifier = ModifierPaddingScreen.weight(1f), errorFromApi = errorFromApi) { email, password ->
             openDialog.value = true
             scope.launch {
                 login.login(email, password, {
-                    //openDialog.value = false
+                    openDialog.value = false
+                    errorFromApi.value = ""
                     println("success")
                 }, {
+                    openDialog.value = false
+                    errorFromApi.value = it
                     println(it)
                 })
             }

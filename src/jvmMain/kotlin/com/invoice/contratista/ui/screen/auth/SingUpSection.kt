@@ -2,19 +2,17 @@ package com.invoice.contratista.ui.screen.auth
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import com.invoice.contratista.theme.ModifierFill
 import com.invoice.contratista.ui.custom.component.OnValueChange
 import com.invoice.contratista.ui.custom.component.TextField
 
+@ExperimentalMaterial3Api
 @Composable
 fun SingUpSection(modifier: Modifier) = Column(
     modifier = modifier,
@@ -44,6 +42,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         }
     }
     val state = remember { mutableStateOf(true) }
+    val errorFromApi = rememberSaveable { mutableStateOf("") }
     Text(text = "Create an account", style = MaterialTheme.typography.titleLarge)
     TextField(
         hint = "Name",
@@ -51,6 +50,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         icon = "business",
         isRequired = true,
         change = onNameChange,
+        externalError = errorFromApi,
     )
     TextField(
         hint = "Email",
@@ -58,6 +58,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         icon = "mail",
         isRequired = true,
         change = onEmailChange,
+        externalError = errorFromApi,
     )
     TextField(
         hint = "Password",
@@ -66,6 +67,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         isRequired = true,
         visualTransformation = PasswordVisualTransformation(),
         change = onPasswordChange,
+        externalError = errorFromApi,
     )
     TextField(
         hint = "Password",
@@ -74,6 +76,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         isRequired = true,
         visualTransformation = PasswordVisualTransformation(),
         change = onPasswordConfirmChange,
+        externalError = errorFromApi,
     )
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(

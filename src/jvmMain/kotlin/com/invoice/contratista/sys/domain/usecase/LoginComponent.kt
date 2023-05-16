@@ -27,7 +27,7 @@ class LoginComponent() : KoinComponent {
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
         if (isLoggedUser) {
-            if (!userService.login(email, password)) {
+            if (userService.login(email, password)) {
                 onError.invoke("Email or password incorrect!")
                 return@withContext
             }
