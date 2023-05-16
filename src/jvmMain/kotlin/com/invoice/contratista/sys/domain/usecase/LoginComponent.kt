@@ -27,6 +27,10 @@ class LoginComponent() : KoinComponent {
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
         if (isLoggedUser) {
+            if (!userService.login(email, password)) {
+                onError.invoke("Email or password incorrect!")
+                return@withContext
+            }
             val request = UpdateTokenRequest(email, userService.getToken()!!, onSuccess, onError)
             repository.updateToken(request, updateToken(onSuccess, onError))
         } else {
@@ -36,15 +40,16 @@ class LoginComponent() : KoinComponent {
 
     fun logout() = userService.logout()
 
-    private fun singIn(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) = object : WebStatus<TokenModel?> {
-        override fun success(data: TokenModel?) {
-            userService.login(UserLogged(email, data!!.token, password))
-            onSuccess.invoke()
+    private fun singIn(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) =
+        object : WebStatus<TokenModel?> {
+            override fun success(data: TokenModel?) {
+                userService.singIn(UserLogged(email, data!!.token, password))
+                onSuccess.invoke()
+            }
+
+            override fun error(e: String) = onError.invoke(e)
+
         }
-
-        override fun error(e: String) = onError.invoke(e)
-
-    }
 
     private fun updateToken(onSuccess: () -> Unit, onError: (String) -> Unit) = object : WebStatus<TokenModel> {
         override fun success(data: TokenModel) {

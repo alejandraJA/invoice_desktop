@@ -46,7 +46,7 @@ fun TextField(
         mutableStateOf(TextFieldValue(text = initField))
     }
 
-    Column(Modifier.widthIn(min = 100.dp, max = 300.dp)) {
+    Column(modifier = modifier) {
         // region Field
         OutlinedTextField(
             value = field,

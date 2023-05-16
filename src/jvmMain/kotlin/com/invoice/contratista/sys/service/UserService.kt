@@ -8,7 +8,9 @@ class UserService(private val repository: UserLoggedRepository) {
     fun setToken(token: String) = repository.setToken(token)
 
     fun isLoggedUser() = repository.isUserLogged()
-    fun login(userLogged: UserLogged) = repository.login(userLogged)
+
+    fun login(email: String, password: String) = repository.login(email, password)
+    fun singIn(userLogged: UserLogged) = repository.singIn(userLogged)
     fun logout() = repository.logout()
     fun delete() = repository.logout()
 }
