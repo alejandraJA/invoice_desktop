@@ -28,20 +28,21 @@ kotlin {
 
                 // Dependencies injection
                 implementation("io.insert-koin:koin-core:3.4.0")
+                implementation("org.jetbrains.compose.material3:material3-desktop:1.4.0-alpha01-dev977")
 
                 // Retrofit
-                implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-                implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-                implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4")
-                implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.4")
-                implementation ("org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2")
+                implementation("com.squareup.retrofit2:retrofit:2.9.0")
+                implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+                implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4")
+                implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.4")
+                implementation("org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2")
 
                 // Corrutinas
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.4")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.4")
 
             }
         }

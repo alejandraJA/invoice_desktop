@@ -12,10 +12,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class LoginComponent(
-        private val onSuccess: () -> Unit,
-        private val onError: (String) -> Unit
-) : KoinComponent {
+class LoginComponent() : KoinComponent {
 
     private val repository: SingRepository by inject()
     private val userService: UserService by inject()
@@ -24,20 +21,22 @@ class LoginComponent(
         get() = userService.isLoggedUser()
 
     suspend fun login(
-            email: String,
-            password: String,
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
         if (isLoggedUser) {
-            val request = UpdateTokenRequest(email, userService.getToken()!!)
-            repository.updateToken(request, updateToken())
+            val request = UpdateTokenRequest(email, userService.getToken()!!, onSuccess, onError)
+            repository.updateToken(request, updateToken(onSuccess, onError))
         } else {
-            repository.singIn(SingRequest(email, password), singIn(email, password))
+            repository.singIn(SingRequest(email, password), singIn(email, password, onSuccess, onError))
         }
     }
 
     fun logout() = userService.logout()
 
-    private fun singIn(email: String, password: String) = object :  WebStatus<TokenModel?> {
+    private fun singIn(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) = object : WebStatus<TokenModel?> {
         override fun success(data: TokenModel?) {
             userService.login(UserLogged(email, data!!.token, password))
             onSuccess.invoke()
@@ -47,7 +46,7 @@ class LoginComponent(
 
     }
 
-    private fun updateToken() = object : WebStatus<TokenModel> {
+    private fun updateToken(onSuccess: () -> Unit, onError: (String) -> Unit) = object : WebStatus<TokenModel> {
         override fun success(data: TokenModel) {
             userService.setToken(data.token)
             onSuccess.invoke()
