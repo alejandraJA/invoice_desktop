@@ -29,6 +29,7 @@ import com.invoice.contratista.theme.ModifierFieldImages
  * @param icon (optional) from resource
  * @param visualTransformation (optional) for change to password
  */
+@ExperimentalMaterial3Api
 @Composable
 fun TextField(
     hint: String,
@@ -48,6 +49,7 @@ fun TextField(
 
     Column(modifier = modifier) {
         // region Field
+        if (initField.isNotEmpty()) change.onChange(initField)
         OutlinedTextField(
             value = field,
             onValueChange = {

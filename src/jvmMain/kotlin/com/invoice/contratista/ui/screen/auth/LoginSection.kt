@@ -10,6 +10,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.ui.custom.component.OnValueChange
 import com.invoice.contratista.ui.custom.component.TextField
 
+
+@ExperimentalMaterial3Api
 @Composable
 fun LoginSection(modifier: Modifier, login: (String, String) -> Unit) = Column(modifier = modifier) {
     var email: String? = null
@@ -26,6 +28,7 @@ fun LoginSection(modifier: Modifier, login: (String, String) -> Unit) = Column(m
     }
     Text(text = "Login now!", style = MaterialTheme.typography.titleLarge)
     TextField(
+        initField = "ale@email.com",
         hint = "Email",
         placeholder = "Type your email",
         icon = "mail",
@@ -33,6 +36,7 @@ fun LoginSection(modifier: Modifier, login: (String, String) -> Unit) = Column(m
         change = onEmailChange,
     )
     TextField(
+        initField = "ale.-112233",
         hint = "Password",
         placeholder = "Type your Password",
         icon = "password",
