@@ -11,7 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.invoice.contratista.sys.domain.usecase.LoginComponent
 import com.invoice.contratista.theme.ModifierPaddingScreen
-import com.invoice.contratista.ui.custom.component.ChargingDialog
+import com.invoice.contratista.ui.custom.component.LoadingDialog
+import com.invoice.contratista.ui.custom.component.ErrorDialog
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
@@ -25,7 +26,7 @@ fun AuthenticationScreen() {
 
     Row {
         Spacer(modifier = Modifier.weight(1f))
-        LoginSection(modifier = ModifierPaddingScreen.weight(1f), errorFromApi = errorFromApi) { email, password ->
+        LoginSection(modifier = ModifierPaddingScreen.weight(1f)) { email, password ->
             openDialog.value = true
             scope.launch {
                 login.login(email, password, {
@@ -39,8 +40,13 @@ fun AuthenticationScreen() {
                 })
             }
         }
-        SingUpSection(modifier = ModifierPaddingScreen.weight(1f))
+        SingUpSection(modifier = ModifierPaddingScreen.weight(1f)) {
+
+        }
         Spacer(modifier = Modifier.weight(1f))
-        ChargingDialog(show = openDialog) { openDialog.value = false }
+        LoadingDialog(show = openDialog) { openDialog.value = false }
+        ErrorDialog(errorFromApi) {
+            errorFromApi.value = ""
+        }
     }
 }

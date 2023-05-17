@@ -1,5 +1,6 @@
 package com.invoice.contratista.ui.screen.auth
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.*
@@ -8,57 +9,69 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.theme.ModifierFill
 import com.invoice.contratista.ui.custom.component.OnValueChange
 import com.invoice.contratista.ui.custom.component.TextField
 
 @ExperimentalMaterial3Api
 @Composable
-fun SingUpSection(modifier: Modifier) = Column(
+fun SingUpSection(
+    modifier: Modifier,
+    singUp: (SingRequest) -> Unit
+) = Column(
     modifier = modifier,
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
 ) {
     var email: String? = null
     var password: String? = null
     var passwordConfirm: String? = null
-    var name: String? = null
+    val errorPassword = rememberSaveable { mutableStateOf("") }
+    val errorEmail = rememberSaveable { mutableStateOf("") }
     val onEmailChange = object : OnValueChange {
         override fun onChange(change: String) {
             email = change
+            errorPassword.value = ""
+            errorEmail.value = ""
         }
     }
     val onPasswordChange = object : OnValueChange {
         override fun onChange(change: String) {
             password = change
+            errorPassword.value = ""
+            errorEmail.value = ""
         }
     }
     val onPasswordConfirmChange = object : OnValueChange {
         override fun onChange(change: String) {
             passwordConfirm = change
-        }
-    }
-    val onNameChange = object : OnValueChange {
-        override fun onChange(change: String) {
-            name = change
+            errorPassword.value = ""
+            errorEmail.value = ""
         }
     }
     val state = remember { mutableStateOf(true) }
-    val errorFromApi = rememberSaveable { mutableStateOf("") }
+
+    val onSingUp = object : () -> Unit {
+        override fun invoke() {
+            if (email?.isEmpty() == true || password?.isEmpty() == true || passwordConfirm?.isEmpty() == true)
+                return
+            if (password != passwordConfirm) {
+                errorPassword.value = "Password do not match"
+                return
+            }
+        }
+    }
+
+    // region UI
     Text(text = "Create an account", style = MaterialTheme.typography.titleLarge)
-    TextField(
-        hint = "Name",
-        placeholder = "Type your name",
-        icon = "business",
-        isRequired = true,
-        change = onNameChange,
-        externalError = errorFromApi,
-    )
     TextField(
         hint = "Email",
         placeholder = "Type your email",
         icon = "mail",
         isRequired = true,
         change = onEmailChange,
-        externalError = errorFromApi,
+        externalError = errorEmail,
     )
     TextField(
         hint = "Password",
@@ -67,7 +80,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         isRequired = true,
         visualTransformation = PasswordVisualTransformation(),
         change = onPasswordChange,
-        externalError = errorFromApi,
+        externalError = errorPassword,
     )
     TextField(
         hint = "Password",
@@ -76,7 +89,7 @@ fun SingUpSection(modifier: Modifier) = Column(
         isRequired = true,
         visualTransformation = PasswordVisualTransformation(),
         change = onPasswordConfirmChange,
-        externalError = errorFromApi,
+        externalError = errorPassword,
     )
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(
@@ -88,10 +101,11 @@ fun SingUpSection(modifier: Modifier) = Column(
         Text(text = "I agree with privacy policy")
     }
     Button(
-        onClick = {},
+        onClick = onSingUp,
         modifier = ModifierFill
     ) {
         Text("Sing Up")
     }
+    // endregion
 
 }

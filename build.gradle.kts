@@ -28,7 +28,7 @@ kotlin {
 
                 // Dependencies injection
                 implementation("io.insert-koin:koin-core:3.4.0")
-                implementation("org.jetbrains.compose.material3:material3-desktop:1.4.0-alpha01-dev977")
+                implementation("org.jetbrains.compose.material3:material3-desktop:1.5.0-dev1043")
 
                 // Retrofit
                 implementation("com.squareup.retrofit2:retrofit:2.9.0")

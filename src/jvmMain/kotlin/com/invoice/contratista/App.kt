@@ -1,6 +1,7 @@
 package com.invoice.contratista
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,6 +19,7 @@ import com.invoice.contratista.ui.screen.auth.AuthenticationScreen
 import com.invoice.contratista.ui.screen.main.MainScreen
 import org.koin.core.context.startKoin
 
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
 @Preview
