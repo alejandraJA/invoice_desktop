@@ -1,11 +1,12 @@
 package com.invoice.contratista
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
@@ -14,20 +15,21 @@ import androidx.compose.ui.window.application
 import com.invoice.contratista.sys.di.appModule
 import com.invoice.contratista.sys.di.webModule
 import com.invoice.contratista.sys.domain.usecase.SingComponent
-import com.invoice.contratista.theme.*
+import com.invoice.contratista.theme.DarkColors
+import com.invoice.contratista.theme.LightColors
+import com.invoice.contratista.theme.Typography
+import com.invoice.contratista.ui.screen.TabItem.Login
+import com.invoice.contratista.ui.screen.TabItem.SingIn
 import com.invoice.contratista.ui.screen.auth.AuthenticationScreen
 import com.invoice.contratista.ui.screen.main.MainScreen
 import org.koin.core.context.startKoin
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
-@Preview
 fun InvoiceApp() {
     val darkTheme by rememberSaveable { mutableStateOf(true) }
-//    val scope = rememberCoroutineScope()
-//    val error = remember { mutableStateOf("") }
-//    val success = remember { mutableStateOf(false) }
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = Typography,

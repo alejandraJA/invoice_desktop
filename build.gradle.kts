@@ -28,7 +28,13 @@ kotlin {
 
                 // Dependencies injection
                 implementation("io.insert-koin:koin-core:3.4.0")
+
+                // Material 3
                 implementation("org.jetbrains.compose.material3:material3-desktop:1.5.0-dev1043")
+
+                // Pager
+                implementation ("com.google.accompanist:accompanist-pager:0.25.0") // Pager
+                implementation ("com.google.accompanist:accompanist-pager-indicators:0.25.0") // Pager Indicators
 
                 // Retrofit
                 implementation("com.squareup.retrofit2:retrofit:2.9.0")
