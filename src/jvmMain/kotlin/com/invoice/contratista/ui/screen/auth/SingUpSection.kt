@@ -24,47 +24,59 @@ fun SingUpSection(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
-    var email: String? = null
-    var password: String? = null
-    var passwordConfirm: String? = null
+    val email = rememberSaveable { mutableStateOf("") }
+    val password = rememberSaveable { mutableStateOf("") }
+    val passwordConfirm = rememberSaveable { mutableStateOf("") }
+    val checkState = remember { mutableStateOf(true) }
     val errorPassword = rememberSaveable { mutableStateOf("") }
     val errorEmail = rememberSaveable { mutableStateOf("") }
     val onEmailChange = object : OnValueChange {
         override fun onChange(change: String) {
-            email = change
-            errorPassword.value = ""
-            errorEmail.value = ""
+            email.value = change
+            errorEmail.value =
+                if (email.value == password.value)
+                    "Email and password cannot be the same"
+                else ""
         }
     }
     val onPasswordChange = object : OnValueChange {
         override fun onChange(change: String) {
-            password = change
-            errorPassword.value = ""
-            errorEmail.value = ""
+            password.value = change
+            errorEmail.value =
+                if (email.value == password.value)
+                    "Email and password cannot be the same"
+                else ""
+            errorPassword.value =
+                if (password.value != passwordConfirm.value)
+                    "Password do not match"
+                else
+                    ""
         }
     }
     val onPasswordConfirmChange = object : OnValueChange {
         override fun onChange(change: String) {
-            passwordConfirm = change
-            errorPassword.value = ""
-            errorEmail.value = ""
+            passwordConfirm.value = change
+            errorEmail.value =
+                if (email.value == password.value)
+                    "Email and password cannot be the same"
+                else ""
+            errorPassword.value =
+                if (password.value != passwordConfirm.value)
+                    "Password do not match"
+                else
+                    ""
         }
     }
-    val state = remember { mutableStateOf(true) }
 
     val onSingUp = object : () -> Unit {
         override fun invoke() {
-            if (email?.isEmpty() == true || password?.isEmpty() == true || passwordConfirm?.isEmpty() == true)
-                return
-            if (password != passwordConfirm) {
-                errorPassword.value = "Password do not match"
-                return
-            }
+            singUp.invoke(SingRequest(email.value, password.value))
         }
     }
 
     // region UI
     Text(text = "Create an account", style = MaterialTheme.typography.titleLarge)
+    // region Field Email
     TextField(
         hint = "Email",
         placeholder = "Type your email",
@@ -73,6 +85,8 @@ fun SingUpSection(
         change = onEmailChange,
         externalError = errorEmail,
     )
+    // endregion
+    // region Field Password
     TextField(
         hint = "Password",
         placeholder = "Type your Password",
@@ -82,6 +96,8 @@ fun SingUpSection(
         change = onPasswordChange,
         externalError = errorPassword,
     )
+    // endregion
+    // region Field Confirm Password
     TextField(
         hint = "Password",
         placeholder = "Confirm Password",
@@ -91,21 +107,30 @@ fun SingUpSection(
         change = onPasswordConfirmChange,
         externalError = errorPassword,
     )
+    // endregion
+    // region Check terms
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(
-            checked = state.value,
+            checked = checkState.value,
             onCheckedChange = {
-                state.value = it
+                checkState.value = it
             }
         )
         Text(text = "I agree with privacy policy")
     }
+    // endregion
+    // region Button SingUp
     Button(
         onClick = onSingUp,
-        modifier = ModifierFill
+        modifier = ModifierFill,
+        enabled = checkState.value && (email.value.isNotEmpty()
+                && password.value.isNotEmpty() && passwordConfirm.value.isNotEmpty())
+                && (password.value == passwordConfirm.value
+                && email.value != password.value)
     ) {
         Text("Sing Up")
     }
+    // endregion
     // endregion
 
 }

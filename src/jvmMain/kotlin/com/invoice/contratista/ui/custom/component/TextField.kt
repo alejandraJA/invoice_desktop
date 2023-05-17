@@ -97,14 +97,13 @@ fun TextField(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(top = 8.dp)
             )
-            if (externalError.value.isNotEmpty()) {
-                Text(
-                    text = externalError.value,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
+
+            if (externalError.value.isNotEmpty() && field.text.isNotEmpty()) Text(
+                text = externalError.value,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
             Spacer(Modifier.weight(1f))
             if (counterEnable) Text(
                 text = "${field.text.length}/$counterNumber",

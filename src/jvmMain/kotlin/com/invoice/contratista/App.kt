@@ -13,7 +13,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.invoice.contratista.sys.di.appModule
 import com.invoice.contratista.sys.di.webModule
-import com.invoice.contratista.sys.domain.usecase.LoginComponent
+import com.invoice.contratista.sys.domain.usecase.SingComponent
 import com.invoice.contratista.theme.*
 import com.invoice.contratista.ui.screen.auth.AuthenticationScreen
 import com.invoice.contratista.ui.screen.main.MainScreen
@@ -25,16 +25,16 @@ import org.koin.core.context.startKoin
 @Preview
 fun InvoiceApp() {
     val darkTheme by rememberSaveable { mutableStateOf(true) }
-    val scope = rememberCoroutineScope()
-    val error = remember { mutableStateOf("") }
-    val success = remember { mutableStateOf(false) }
+//    val scope = rememberCoroutineScope()
+//    val error = remember { mutableStateOf("") }
+//    val success = remember { mutableStateOf(false) }
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = Typography,
     ) {
 //        LoginComponent().login("ale@email.com", "ale.-112233", {}, {})
         Scaffold {
-            if (LoginComponent().isLoggedUser) {
+            if (SingComponent().isLoggedUser) {
                 MainScreen(theme = darkTheme) {
                     // TODO: Not yet implemented
                 }
