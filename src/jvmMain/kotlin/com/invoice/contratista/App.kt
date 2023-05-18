@@ -21,11 +21,14 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.invoice.contratista.sys.di.appModule
 import com.invoice.contratista.sys.di.webModule
+import com.invoice.contratista.sys.domain.usecase.SingComponent
 import com.invoice.contratista.theme.DarkColors
 import com.invoice.contratista.theme.LightColors
 import com.invoice.contratista.theme.Typography
 import com.invoice.contratista.ui.screen.TabItem.Login
 import com.invoice.contratista.ui.screen.TabItem.SingIn
+import com.invoice.contratista.ui.screen.auth.AuthenticationScreen
+import com.invoice.contratista.ui.screen.main.MainScreen
 import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
 
@@ -40,41 +43,13 @@ fun InvoiceApp() {
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = Typography,
     ) {
-        val scope = rememberCoroutineScope()
-        val tabs = listOf(
-            Login,
-            SingIn,
-        )
-        val pagerState = rememberPagerState()
-        var current by remember { mutableStateOf(0) }
         Scaffold {
-            Column {
-                TabRow(
-                    selectedTabIndex = current,
-                ) {
-                    tabs.forEachIndexed { index, any ->
-                        Tab(
-                            icon = { },
-                            text = { Text(any.title) },
-                            selected = current == index, //pagerState.currentPage == index,
-                            onClick = {
-                                scope.launch {
-                                    current = index
-                                }
-                            }
-                        )
-
-                    }
-
+            if (SingComponent().isLoggedUser) {
+                MainScreen(theme = darkTheme) {
                 }
+            } else {
+                AuthenticationScreen()
             }
-//            if (SingComponent().isLoggedUser) {
-//                MainScreen(theme = darkTheme) {
-//                    // TODO: Not yet implemented
-//                }
-//            } else {
-//                AuthenticationScreen()
-//            }
         }
     }
 }
