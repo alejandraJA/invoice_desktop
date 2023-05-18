@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
-fun LoginSection() {
+fun LoginSection(onLoggedUser: () -> Unit) {
     // region logic
     var email: String? = null
     var password: String? = null
@@ -44,6 +44,7 @@ fun LoginSection() {
     }
     val onSuccessLogin = object : () -> Unit {
         override fun invoke() {
+            onLoggedUser.invoke()
             loadingDialogState.value = false
             errorState.value = ""
         }

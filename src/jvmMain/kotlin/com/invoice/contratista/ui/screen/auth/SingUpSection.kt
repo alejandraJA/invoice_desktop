@@ -6,9 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.sys.domain.usecase.SingComponent
 import com.invoice.contratista.theme.ModifierFill
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
-fun SingUpSection() {
+fun SingUpSection(onLoggedUser: () -> Unit) {
     // region logic
     val email = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
@@ -42,6 +40,7 @@ fun SingUpSection() {
     }
     val onSuccessLogin = object : () -> Unit {
         override fun invoke() {
+            onLoggedUser.invoke()
             loadingDialogState.value = false
             errorState.value = ""
         }

@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun AuthenticationScreen() = Column(
+fun AuthenticationScreen(onLoggedUser: () -> Unit) = Column(
     modifier = Modifier.fillMaxHeight(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
@@ -27,16 +27,18 @@ fun AuthenticationScreen() = Column(
     val scope = rememberCoroutineScope()
     val tabs = listOf(
         TabItem.Login,
-        TabItem.SingIn,
+        TabItem.SingUp,
     )
     val pagerState = rememberPagerState(initialPage = 0)
 
+    // region screen
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.weight(1f))
         HorizontalPager(modifier = Modifier.weight(1f), state = pagerState, pageCount = tabs.size) { page ->
+            tabs[page].onSuccess = onLoggedUser
             tabs[page].screen()
             Text("") // No se mostraba la ui
         }
@@ -50,4 +52,5 @@ fun AuthenticationScreen() = Column(
     }) {
         Text(if (pagerState.currentPage == 0) "Do you have an account?" else "Login now!")
     }
+    // endregion
 }

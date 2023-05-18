@@ -1,20 +1,12 @@
 package com.invoice.contratista
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.Tab
-import androidx.compose.material3.LeadingIconTab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
@@ -25,12 +17,10 @@ import com.invoice.contratista.sys.domain.usecase.SingComponent
 import com.invoice.contratista.theme.DarkColors
 import com.invoice.contratista.theme.LightColors
 import com.invoice.contratista.theme.Typography
-import com.invoice.contratista.ui.screen.TabItem.Login
-import com.invoice.contratista.ui.screen.TabItem.SingIn
 import com.invoice.contratista.ui.screen.auth.AuthenticationScreen
 import com.invoice.contratista.ui.screen.main.MainScreen
-import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
+import java.util.prefs.Preferences
 
 
 @ExperimentalFoundationApi
@@ -39,16 +29,19 @@ import org.koin.core.context.startKoin
 @Composable
 fun InvoiceApp() {
     val darkTheme by rememberSaveable { mutableStateOf(true) }
+    val isLoggedUser = remember { mutableStateOf(SingComponent().isLoggedUser) }
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = Typography,
     ) {
         Scaffold {
-            if (SingComponent().isLoggedUser) {
+            if (isLoggedUser.value) {
                 MainScreen(theme = darkTheme) {
                 }
             } else {
-                AuthenticationScreen()
+                AuthenticationScreen(onLoggedUser = {
+                    isLoggedUser.value = true
+                })
             }
         }
     }
