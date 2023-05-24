@@ -1,14 +1,9 @@
 package com.invoice.contratista.data.repository.local
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material3.ExperimentalMaterial3Api
 import com.invoice.contratista.data.source.local.UserLogged
 import com.invoice.contratista.sys.domain.repository.local.UserLoggedRepository
 import java.util.prefs.Preferences
 
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalFoundationApi
-@ExperimentalMaterial3Api
 class LocalLoggedRepositoryImp : UserLoggedRepository {
 
     private val preferences = Preferences.userNodeForPackage(LocalLoggedRepositoryImp::class.java)
