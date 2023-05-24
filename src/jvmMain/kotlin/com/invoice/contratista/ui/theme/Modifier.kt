@@ -1,4 +1,4 @@
-package com.invoice.contratista.theme
+package com.invoice.contratista.ui.theme
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

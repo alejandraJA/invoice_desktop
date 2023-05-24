@@ -1,6 +1,11 @@
 package com.invoice.contratista.utils
 
+import androidx.compose.runtime.Composable
+
+typealias ComposableFun = @Composable () -> Unit
+
 object Constants {
+
 
     enum class Status { Success, Failure, Loading }
 

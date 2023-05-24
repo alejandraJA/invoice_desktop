@@ -12,7 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.theme.ModifierFill
+import com.invoice.contratista.ui.theme.ModifierFill
 
 @ExperimentalMaterialApi
 @Composable

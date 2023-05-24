@@ -1,4 +1,4 @@
-package com.invoice.contratista.ui.screen.auth
+package com.invoice.contratista.ui.section
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.sys.domain.usecase.SingComponent
-import com.invoice.contratista.theme.ModifierFill
-import com.invoice.contratista.theme.ModifierPaddingScreen
+import com.invoice.contratista.ui.theme.ModifierFill
+import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.OnValueChange

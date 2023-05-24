@@ -1,4 +1,4 @@
-package com.invoice.contratista.ui.screen.auth
+package com.invoice.contratista.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.invoice.contratista.ui.screen.TabItem
+import com.invoice.contratista.ui.model.TabItem
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi

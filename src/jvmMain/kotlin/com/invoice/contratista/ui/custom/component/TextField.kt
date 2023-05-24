@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.theme.ModifierFieldImages
+import com.invoice.contratista.ui.theme.ModifierFieldImages
 
 /**
  * **My Custom TextField**

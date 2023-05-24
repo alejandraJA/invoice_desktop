@@ -14,13 +14,12 @@ import androidx.compose.ui.window.application
 import com.invoice.contratista.sys.di.appModule
 import com.invoice.contratista.sys.di.webModule
 import com.invoice.contratista.sys.domain.usecase.SingComponent
-import com.invoice.contratista.theme.DarkColors
-import com.invoice.contratista.theme.LightColors
-import com.invoice.contratista.theme.Typography
-import com.invoice.contratista.ui.screen.auth.AuthenticationScreen
-import com.invoice.contratista.ui.screen.main.MainScreen
+import com.invoice.contratista.ui.theme.DarkColors
+import com.invoice.contratista.ui.theme.LightColors
+import com.invoice.contratista.ui.theme.Typography
+import com.invoice.contratista.ui.screen.AuthenticationScreen
+import com.invoice.contratista.ui.screen.MainScreen
 import org.koin.core.context.startKoin
-import java.util.prefs.Preferences
 
 
 @ExperimentalFoundationApi
@@ -36,8 +35,7 @@ fun InvoiceApp() {
     ) {
         Scaffold {
             if (isLoggedUser.value) {
-                MainScreen(theme = darkTheme) {
-                }
+                MainScreen()
             } else {
                 AuthenticationScreen(onLoggedUser = {
                     isLoggedUser.value = true
