@@ -1,7 +1,6 @@
 package com.invoice.contratista.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -31,7 +30,7 @@ fun MainScreen() {
 
     Row(modifier = ModifierFill) {
         NavigationRail {
-            items.forEachIndexed { index, item ->
+            items.forEachIndexed { index, _ ->
                 NavigationRailItem(
                     icon = {
                         Icon(

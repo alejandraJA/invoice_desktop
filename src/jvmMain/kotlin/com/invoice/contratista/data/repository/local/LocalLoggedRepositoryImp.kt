@@ -47,7 +47,6 @@ class LocalLoggedRepositoryImp : UserLoggedRepository {
 }
 
 object UserConstants {
-    const val NAME = "user"
     const val USERNAME = "username"
     const val PASSWORD = "password"
     const val TOKEN = "token"

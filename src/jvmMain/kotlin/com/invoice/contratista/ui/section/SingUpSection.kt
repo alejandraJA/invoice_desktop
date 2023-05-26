@@ -9,12 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.sys.domain.usecase.SingComponent
+import com.invoice.contratista.ui.custom.component.*
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
-import com.invoice.contratista.ui.custom.component.ErrorDialog
-import com.invoice.contratista.ui.custom.component.LoadingDialog
-import com.invoice.contratista.ui.custom.component.OnValueChange
-import com.invoice.contratista.ui.custom.component.TextField
+import com.invoice.contratista.utils.EMAIL_CANNOT_EQUALS_PASSWORD
+import com.invoice.contratista.utils.PASSWORD_NOT_MATCH
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -32,25 +31,23 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
     val sing = SingComponent()
     val loadingDialogState = rememberSaveable { mutableStateOf(false) }
     val errorState = rememberSaveable { mutableStateOf("") }
-    val onError = object : (String) -> Unit {
-        override fun invoke(error: String) {
-            loadingDialogState.value = false
-            errorState.value = error
-        }
+    val onError: (String) -> Unit = {
+        loadingDialogState.value = false
+        errorState.value = it
     }
-    val onSuccessLogin = object : () -> Unit {
-        override fun invoke() {
-            onLoggedUser.invoke()
-            loadingDialogState.value = false
-            errorState.value = ""
-        }
+
+    val onSuccessLogin: () -> Unit = {
+        onLoggedUser.invoke()
+        loadingDialogState.value = false
+        errorState.value = ""
     }
+
     val onEmailChange = object : OnValueChange {
         override fun onChange(change: String) {
             email.value = change
             errorEmail.value =
                 if (email.value == password.value)
-                    "Email and password cannot be the same"
+                    EMAIL_CANNOT_EQUALS_PASSWORD
                 else ""
         }
     }
@@ -59,11 +56,11 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             password.value = change
             errorEmail.value =
                 if (email.value == password.value)
-                    "Email and password cannot be the same"
+                    EMAIL_CANNOT_EQUALS_PASSWORD
                 else ""
             errorPassword.value =
                 if (password.value != passwordConfirm.value)
-                    "Password do not match"
+                    PASSWORD_NOT_MATCH
                 else
                     ""
         }
@@ -73,38 +70,34 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             passwordConfirm.value = change
             errorEmail.value =
                 if (email.value == password.value)
-                    "Email and password cannot be the same"
+                    EMAIL_CANNOT_EQUALS_PASSWORD
                 else ""
             errorPassword.value =
                 if (password.value != passwordConfirm.value)
-                    "Password do not match"
+                    PASSWORD_NOT_MATCH
                 else
                     ""
         }
     }
 
-    val singUp = object : (SingRequest) -> Unit {
-        override fun invoke(request: SingRequest) {
-            loadingDialogState.value = true
-            scope.launch {
-                sing.singUp(request = request, {
-                    scope.launch {
-                        sing.login(
-                            email = request.username!!,
-                            password = request.password!!,
-                            onSuccess = onSuccessLogin,
-                            onError = onError
-                        )
-                    }
-                }, onError)
-            }
+    val singUp: (SingRequest) -> Unit = { request ->
+        loadingDialogState.value = true
+        scope.launch {
+            sing.singUp(request = request, {
+                scope.launch {
+                    sing.login(
+                        email = request.username!!,
+                        password = request.password!!,
+                        onSuccess = onSuccessLogin,
+                        onError = onError
+                    )
+                }
+            }, onError)
         }
     }
 
-    val onSingUp = object : () -> Unit {
-        override fun invoke() {
-            singUp.invoke(SingRequest(email.value, password.value))
-        }
+    val onSingUp: () -> Unit = {
+        singUp.invoke(SingRequest(email.value, password.value))
     }
     // endregion
 
@@ -118,37 +111,43 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             Text(text = "Create an account", style = MaterialTheme.typography.titleLarge)
             // region Field Email
             TextField(
-                initField = "email2@email.com",
-                hint = "Email",
-                placeholder = "Type your email",
-                icon = "mail",
-                isRequired = true,
-                change = onEmailChange,
-                externalError = errorEmail,
+                TextFieldModel(
+                    initField = "email2@email.com",
+                    hint = "Email",
+                    placeholder = "Type your email",
+                    icon = "mail",
+                    isRequired = true,
+                    change = onEmailChange,
+                    externalError = errorEmail,
+                )
             )
             // endregion
             // region Field Password
             TextField(
-                initField = "ale.-112233",
-                hint = "Password",
-                placeholder = "Type your Password",
-                icon = "password",
-                isRequired = true,
-                visualTransformation = PasswordVisualTransformation(),
-                change = onPasswordChange,
-                externalError = errorPassword,
+                TextFieldModel(
+                    initField = "ale.-112233",
+                    hint = "Password",
+                    placeholder = "Type your Password",
+                    icon = "password",
+                    isRequired = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    change = onPasswordChange,
+                    externalError = errorPassword,
+                )
             )
             // endregion
             // region Field Confirm Password
             TextField(
-                initField = "ale.-112233",
-                hint = "Password",
-                placeholder = "Confirm Password",
-                icon = "password",
-                isRequired = true,
-                visualTransformation = PasswordVisualTransformation(),
-                change = onPasswordConfirmChange,
-                externalError = errorPassword,
+                TextFieldModel(
+                    initField = "ale.-112233",
+                    hint = "Password",
+                    placeholder = "Confirm Password",
+                    icon = "password",
+                    isRequired = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    change = onPasswordConfirmChange,
+                    externalError = errorPassword,
+                )
             )
             // endregion
             // region Check terms

@@ -14,11 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.sys.domain.usecase.SingComponent
+import com.invoice.contratista.ui.custom.component.*
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
-import com.invoice.contratista.ui.custom.component.ErrorDialog
-import com.invoice.contratista.ui.custom.component.LoadingDialog
-import com.invoice.contratista.ui.custom.component.OnValueChange
-import com.invoice.contratista.ui.custom.component.TextField
 import kotlinx.coroutines.launch
 
 
@@ -36,19 +33,16 @@ fun LoginSection(onLoggedUser: () -> Unit) {
     val sing = SingComponent()
     val loadingDialogState = rememberSaveable { mutableStateOf(false) }
     val errorState = rememberSaveable { mutableStateOf("") }
-    val onError = object : (String) -> Unit {
-        override fun invoke(error: String) {
-            loadingDialogState.value = false
-            errorState.value = error
-        }
+    val onError: (String) -> Unit = { error ->
+        loadingDialogState.value = false
+        errorState.value = error
     }
-    val onSuccessLogin = object : () -> Unit {
-        override fun invoke() {
-            onLoggedUser.invoke()
-            loadingDialogState.value = false
-            errorState.value = ""
-        }
+    val onSuccessLogin: () -> Unit = {
+        onLoggedUser.invoke()
+        loadingDialogState.value = false
+        errorState.value = ""
     }
+
     val onEmailChange = object : OnValueChange {
         override fun onChange(change: String) {
             email = change
@@ -63,25 +57,19 @@ fun LoginSection(onLoggedUser: () -> Unit) {
             errorEmail.value = ""
         }
     }
-    val onLogin = object : (String, String) -> Unit {
-        override fun invoke(email: String, password: String) {
-            loadingDialogState.value = true
-            scope.launch {
-                sing.login(email, password, onSuccessLogin, onError)
-            }
+    val onLogin: (String, String) -> Unit = { email1, password1 ->
+        loadingDialogState.value = true
+        scope.launch {
+            sing.login(email1, password1, onSuccessLogin, onError)
         }
     }
-    val onLogIn = object : () -> Unit {
-        override fun invoke() {
-            email?.let { password?.let { it1 -> onLogin.invoke(it, it1) } }
-            errorPassword.value = ""
-            errorEmail.value = ""
-        }
+    val onLogIn: () -> Unit = {
+        email?.let { password?.let { it1 -> onLogin.invoke(it, it1) } }
+        errorPassword.value = ""
+        errorEmail.value = ""
     }
-    val onLostYourPass = object : () -> Unit {
-        override fun invoke() {
-            println("Lost yur pass")
-        }
+    val onLostYourPass: () -> Unit = {
+        println("Lost yur pass")
     }
     // endregion
 
@@ -95,23 +83,27 @@ fun LoginSection(onLoggedUser: () -> Unit) {
         ) {
             Text(text = "Login now!", style = MaterialTheme.typography.titleLarge)
             TextField(
-                initField = "ale@email.com",
-                hint = "Email",
-                placeholder = "Type your email",
-                icon = "mail",
-                isRequired = true,
-                change = onEmailChange,
-                externalError = errorEmail
+                TextFieldModel(
+                    initField = "ale@email.com",
+                    hint = "Email",
+                    placeholder = "Type your email",
+                    icon = "mail",
+                    isRequired = true,
+                    change = onEmailChange,
+                    externalError = errorEmail
+                )
             )
             TextField(
-                initField = "ale.-112233",
-                hint = "Password",
-                placeholder = "Type your Password",
-                icon = "password",
-                isRequired = true,
-                visualTransformation = PasswordVisualTransformation(),
-                change = onPasswordChange,
-                externalError = errorPassword
+                TextFieldModel(
+                    initField = "ale.-112233",
+                    hint = "Password",
+                    placeholder = "Type your Password",
+                    icon = "password",
+                    isRequired = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    change = onPasswordChange,
+                    externalError = errorPassword
+                )
             )
             Row {
                 TextButton(
