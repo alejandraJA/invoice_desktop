@@ -37,7 +37,7 @@ fun TextField(
     isRequired: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     counterEnable: Boolean = false,
-    change: OnValueChange,
+    change: (String) -> Unit,
     externalError: MutableState<String> = mutableStateOf("")
 ) {
     val counterNumber = 0

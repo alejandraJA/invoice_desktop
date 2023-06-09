@@ -14,11 +14,11 @@ import androidx.compose.ui.window.application
 import com.invoice.contratista.sys.di.appModule
 import com.invoice.contratista.sys.di.webModule
 import com.invoice.contratista.sys.domain.usecase.SingComponent
+import com.invoice.contratista.ui.screen.AuthenticationScreen
+import com.invoice.contratista.ui.screen.MainScreen
 import com.invoice.contratista.ui.theme.DarkColors
 import com.invoice.contratista.ui.theme.LightColors
 import com.invoice.contratista.ui.theme.Typography
-import com.invoice.contratista.ui.screen.AuthenticationScreen
-import com.invoice.contratista.ui.screen.MainScreen
 import org.koin.core.context.startKoin
 
 
@@ -27,8 +27,9 @@ import org.koin.core.context.startKoin
 @ExperimentalMaterial3Api
 @Composable
 fun InvoiceApp() {
+    val singComponent = SingComponent()
     val darkTheme by rememberSaveable { mutableStateOf(true) }
-    val isLoggedUser = remember { mutableStateOf(SingComponent().isLoggedUser) }
+    val isLoggedUser = remember { mutableStateOf(singComponent.isLoggedUser) }
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = Typography,

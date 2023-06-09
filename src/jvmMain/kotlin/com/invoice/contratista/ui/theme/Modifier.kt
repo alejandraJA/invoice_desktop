@@ -8,4 +8,5 @@ import androidx.compose.ui.unit.dp
 
 val ModifierFieldImages = Modifier.size(24.dp)
 val ModifierPaddingScreen = Modifier.padding(16.dp)
+val ModifierPaddingScreen2 = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
 val ModifierFill = Modifier.fillMaxWidth()

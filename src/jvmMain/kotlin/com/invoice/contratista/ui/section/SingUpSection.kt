@@ -1,20 +1,24 @@
 package com.invoice.contratista.ui.section
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.sys.domain.usecase.SingComponent
-import com.invoice.contratista.ui.theme.ModifierFill
-import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
-import com.invoice.contratista.ui.custom.component.OnValueChange
 import com.invoice.contratista.ui.custom.component.TextField
+import com.invoice.contratista.ui.theme.ModifierFill
+import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -32,80 +36,68 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
     val sing = SingComponent()
     val loadingDialogState = rememberSaveable { mutableStateOf(false) }
     val errorState = rememberSaveable { mutableStateOf("") }
-    val onError = object : (String) -> Unit {
-        override fun invoke(error: String) {
-            loadingDialogState.value = false
-            errorState.value = error
-        }
+    val onError = { error: String ->
+        loadingDialogState.value = false
+        errorState.value = error
     }
-    val onSuccessLogin = object : () -> Unit {
-        override fun invoke() {
-            onLoggedUser.invoke()
-            loadingDialogState.value = false
-            errorState.value = ""
-        }
+
+    val onSuccessLogin = {
+        onLoggedUser.invoke()
+        loadingDialogState.value = false
+        errorState.value = ""
     }
-    val onEmailChange = object : OnValueChange {
-        override fun onChange(change: String) {
-            email.value = change
-            errorEmail.value =
-                if (email.value == password.value)
-                    "Email and password cannot be the same"
-                else ""
-        }
+
+    val onEmailChange = { change: String ->
+        email.value = change
+        errorEmail.value =
+            if (email.value == password.value)
+                "Email and password cannot be the same"
+            else ""
     }
-    val onPasswordChange = object : OnValueChange {
-        override fun onChange(change: String) {
-            password.value = change
-            errorEmail.value =
-                if (email.value == password.value)
-                    "Email and password cannot be the same"
-                else ""
-            errorPassword.value =
-                if (password.value != passwordConfirm.value)
-                    "Password do not match"
-                else
-                    ""
-        }
+
+    val onPasswordChange = { change: String ->
+        password.value = change
+        errorEmail.value =
+            if (email.value == password.value)
+                "Email and password cannot be the same"
+            else ""
+        errorPassword.value =
+            if (password.value != passwordConfirm.value)
+                "Password do not match"
+            else
+                ""
     }
-    val onPasswordConfirmChange = object : OnValueChange {
-        override fun onChange(change: String) {
-            passwordConfirm.value = change
-            errorEmail.value =
-                if (email.value == password.value)
-                    "Email and password cannot be the same"
-                else ""
-            errorPassword.value =
-                if (password.value != passwordConfirm.value)
-                    "Password do not match"
-                else
-                    ""
+
+    val onPasswordConfirmChange = { change: String ->
+        passwordConfirm.value = change
+        errorEmail.value =
+            if (email.value == password.value)
+                "Email and password cannot be the same"
+            else ""
+        errorPassword.value =
+            if (password.value != passwordConfirm.value)
+                "Password do not match"
+            else
+                ""
+
+    }
+
+    val singUp = { request: SingRequest ->
+        loadingDialogState.value = true
+        scope.launch {
+            sing.singUp(request = request, {
+                scope.launch {
+                    sing.login(
+                        email = request.username!!,
+                        password = request.password!!,
+                        onSuccess = onSuccessLogin,
+                        onError = onError
+                    )
+                }
+            }, onError)
         }
     }
 
-    val singUp = object : (SingRequest) -> Unit {
-        override fun invoke(request: SingRequest) {
-            loadingDialogState.value = true
-            scope.launch {
-                sing.singUp(request = request, {
-                    scope.launch {
-                        sing.login(
-                            email = request.username!!,
-                            password = request.password!!,
-                            onSuccess = onSuccessLogin,
-                            onError = onError
-                        )
-                    }
-                }, onError)
-            }
-        }
-    }
-
-    val onSingUp = object : () -> Unit {
-        override fun invoke() {
-            singUp.invoke(SingRequest(email.value, password.value))
-        }
-    }
     // endregion
 
     // region UI
@@ -164,7 +156,7 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             // endregion
             // region Button SingUp
             Button(
-                onClick = onSingUp,
+                onClick = { singUp.invoke(SingRequest(email.value, password.value)) },
                 modifier = ModifierFill,
                 enabled = checkState.value && (email.value.isNotEmpty()
                         && password.value.isNotEmpty() && passwordConfirm.value.isNotEmpty())

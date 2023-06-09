@@ -1,11 +1,11 @@
 package com.invoice.contratista.sys.di
 
 import com.invoice.contratista.data.repository.web.CustomerRepositoryImp
-import com.invoice.contratista.data.repository.web.ProductRepositoryImp
+import com.invoice.contratista.data.repository.web.EventRepositoryImp
 import com.invoice.contratista.data.repository.web.SingRepositoryImp
 import com.invoice.contratista.data.source.web.retrofit.Service
 import com.invoice.contratista.sys.domain.repository.web.CustomerRepository
-import com.invoice.contratista.sys.domain.repository.web.ProductRepository
+import com.invoice.contratista.sys.domain.repository.web.EventRepository
 import com.invoice.contratista.sys.domain.repository.web.SingRepository
 import com.invoice.contratista.utils.Constants
 import okhttp3.OkHttpClient
@@ -23,10 +23,10 @@ fun webModule() = module {
     }
     single<Retrofit> {
         Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Constants.BASE_URL)
-                .client(get())
-                .build()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(Constants.BASE_URL)
+            .client(get())
+            .build()
     }
     single<Service> {
         val retrofit: Retrofit = get()
@@ -36,7 +36,7 @@ fun webModule() = module {
 
 
     factory<CustomerRepository> { CustomerRepositoryImp(get()) }
-    factory<ProductRepository> { ProductRepositoryImp(get()) }
+    factory<EventRepository> { EventRepositoryImp(get()) }
     factory<SingRepository> { SingRepositoryImp(get()) }
 
 }
