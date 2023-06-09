@@ -17,6 +17,7 @@ import com.invoice.contratista.sys.domain.usecase.SingComponent
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.TextField
+import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import kotlinx.coroutines.launch
 
@@ -62,14 +63,14 @@ fun LoginSection(onLoggedUser: () -> Unit) {
         }
     }
     val onLogIn = {
-            email?.let { password?.let { it1 -> onLogin.invoke(it, it1) } }
-            errorPassword.value = ""
-            errorEmail.value = ""
-        }
+        email?.let { password?.let { it1 -> onLogin.invoke(it, it1) } }
+        errorPassword.value = ""
+        errorEmail.value = ""
+    }
 
     val onLostYourPass = {
-            println("Lost yur pass")
-        }
+        println("Lost yur pass")
+    }
 
     // endregion
 
@@ -83,23 +84,27 @@ fun LoginSection(onLoggedUser: () -> Unit) {
         ) {
             Text(text = "Login now!", style = MaterialTheme.typography.titleLarge)
             TextField(
-                initField = "ale@email.com",
-                hint = "Email",
-                placeholder = "Type your email",
-                icon = "mail",
-                isRequired = true,
-                change = onEmailChange,
-                externalError = errorEmail
+                TextFieldModel(
+                    initField = "ale@email.com",
+                    hint = "Email",
+                    placeholder = "Type your email",
+                    icon = "mail",
+                    isRequired = true,
+                    change = onEmailChange,
+                    externalError = errorEmail
+                )
             )
             TextField(
-                initField = "ale.-112233",
-                hint = "Password",
-                placeholder = "Type your Password",
-                icon = "password",
-                isRequired = true,
-                visualTransformation = PasswordVisualTransformation(),
-                change = onPasswordChange,
-                externalError = errorPassword
+                TextFieldModel(
+                    initField = "ale.-112233",
+                    hint = "Password",
+                    placeholder = "Type your Password",
+                    icon = "password",
+                    isRequired = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    change = onPasswordChange,
+                    externalError = errorPassword
+                )
             )
             Row {
                 TextButton(

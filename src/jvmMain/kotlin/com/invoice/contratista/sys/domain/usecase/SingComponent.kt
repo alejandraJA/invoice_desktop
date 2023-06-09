@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.coroutines.CoroutineContext
 
 class SingComponent() : KoinComponent {
 
@@ -25,8 +26,9 @@ class SingComponent() : KoinComponent {
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) = withContext(Dispatchers.IO) {
+        onError: (String) -> Unit,
+        context: CoroutineContext = Dispatchers.IO,
+    ) = withContext(context =  context) {
         if (isLoggedUser) {
             if (userService.login(email, password)) {
                 onError.invoke("Email or password incorrect!")
@@ -42,8 +44,9 @@ class SingComponent() : KoinComponent {
     suspend fun singUp(
         request: SingRequest,
         onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) = withContext(Dispatchers.IO) {
+        onError: (String) -> Unit,
+        context: CoroutineContext = Dispatchers.IO,
+    ) = withContext(context =  context) {
         repository.singUp(request, singUpWebStatus(onSuccess, onError))
     }
 
