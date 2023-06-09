@@ -19,8 +19,14 @@ class SingComponent() : KoinComponent {
     private val repository: SingRepository by inject()
     private val userService: UserService by inject()
 
-    val isLoggedUser: Boolean
-        get() = userService.isLoggedUser()
+    val isLoggedUser: Boolean get() = userService.isLoggedUser()
+
+    suspend fun updateToken(success: () -> Unit) = withContext(Dispatchers.IO) {
+        repository.updateToken(
+            userService.getUpdateTokenRequest(),
+            updateToken(success, {})
+        )
+    }
 
     suspend fun login(
         email: String,
@@ -28,13 +34,13 @@ class SingComponent() : KoinComponent {
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
         context: CoroutineContext = Dispatchers.IO,
-    ) = withContext(context =  context) {
+    ) = withContext(context = context) {
         if (isLoggedUser) {
             if (userService.login(email, password)) {
                 onError.invoke("Email or password incorrect!")
                 return@withContext
             }
-            val request = UpdateTokenRequest(email, userService.getToken()!!, onSuccess, onError)
+            val request = UpdateTokenRequest(email, userService.getToken()!!)
             repository.updateToken(request, updateToken(onSuccess, onError))
             return@withContext
         }
@@ -46,7 +52,7 @@ class SingComponent() : KoinComponent {
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
         context: CoroutineContext = Dispatchers.IO,
-    ) = withContext(context =  context) {
+    ) = withContext(context = context) {
         repository.singUp(request, singUpWebStatus(onSuccess, onError))
     }
 

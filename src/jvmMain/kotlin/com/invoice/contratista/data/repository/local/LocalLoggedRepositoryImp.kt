@@ -1,6 +1,7 @@
 package com.invoice.contratista.data.repository.local
 
 import com.invoice.contratista.data.source.local.UserLogged
+import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
 import com.invoice.contratista.sys.domain.repository.local.UserLoggedRepository
 import java.util.prefs.Preferences
 
@@ -43,6 +44,8 @@ class LocalLoggedRepositoryImp : UserLoggedRepository {
     override fun isUserLogged() = _token.isNotEmpty()
     override fun login(email: String, password: String): Boolean =
         this._email == email && this._password == password
+
+    override fun getTokenRequest(): UpdateTokenRequest = UpdateTokenRequest(_email, _token)
 
 }
 

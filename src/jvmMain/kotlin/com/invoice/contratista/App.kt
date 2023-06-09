@@ -19,6 +19,7 @@ import com.invoice.contratista.ui.screen.MainScreen
 import com.invoice.contratista.ui.theme.DarkColors
 import com.invoice.contratista.ui.theme.LightColors
 import com.invoice.contratista.ui.theme.Typography
+import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
 
 
@@ -28,15 +29,26 @@ import org.koin.core.context.startKoin
 @Composable
 fun InvoiceApp() {
     val singComponent = SingComponent()
+    val scope = rememberCoroutineScope()
     val darkTheme by rememberSaveable { mutableStateOf(true) }
     val isLoggedUser = remember { mutableStateOf(singComponent.isLoggedUser) }
+    val updateToken = remember { mutableStateOf(false) }
+
+    scope.launch {
+        if (singComponent.isLoggedUser) {
+            singComponent.updateToken {
+                updateToken.value = true
+            }
+        }
+    }
+
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = Typography,
     ) {
         Scaffold {
             if (isLoggedUser.value) {
-                MainScreen()
+                if (updateToken.value) MainScreen()
             } else {
                 AuthenticationScreen(onLoggedUser = {
                     isLoggedUser.value = true
