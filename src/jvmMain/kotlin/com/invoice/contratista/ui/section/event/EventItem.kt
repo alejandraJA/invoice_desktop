@@ -15,7 +15,14 @@ import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 
 @ExperimentalMaterial3Api
 @Composable
-fun SetEventItem(eventModel: EventModel) = ElevatedCard(modifier = Modifier.padding(top = 8.dp)) {
+fun SetEventItem(
+    eventModel: EventModel,
+    modifier: Modifier,
+    eventSelected: (EventModel?) -> Unit
+) = ElevatedCard(
+    onClick = { eventSelected.invoke(eventModel) },
+    modifier = modifier
+) {
     Column(modifier = ModifierPaddingScreen) {
         Row(
             horizontalArrangement = Arrangement.Center,
