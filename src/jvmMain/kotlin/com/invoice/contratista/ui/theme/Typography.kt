@@ -62,4 +62,10 @@ val Typography = Typography(
         fontSize = 14.sp,
         letterSpacing = 0.5.sp
     ),
+    bodySmall = TextStyle(
+        fontFamily = Nunito,
+        fontWeight = FontWeight.ExtraLight,
+        fontSize = 12.sp,
+        letterSpacing = 0.5.sp
+    )
 )
