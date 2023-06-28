@@ -2,6 +2,7 @@ package com.invoice.contratista.data.source.web.retrofit
 
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
+import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.data.source.web.models.response.ResponseApi
 import com.invoice.contratista.data.source.web.models.response.TokenModel
 import com.invoice.contratista.data.source.web.models.response.UserModel
@@ -29,5 +30,11 @@ interface Service {
 
     @GET("event")
     suspend fun getAllEvents(@Header(Constants.AUTHORIZATION) token: String): Response<ResponseApi<List<EventModel>>>
+
+    @GET("product/{id}")
+    suspend fun getByIdProduct(
+        @Header(Constants.AUTHORIZATION) token: String,
+        @Path("id") idProduct: String
+    ): Response<ResponseApi<ProductInventoryModel>>
 
 }
