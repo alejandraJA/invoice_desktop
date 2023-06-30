@@ -13,7 +13,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.invoice.contratista.sys.di.appModule
 import com.invoice.contratista.sys.di.webModule
-import com.invoice.contratista.sys.domain.usecase.SingComponent
+import com.invoice.contratista.sys.domain.repository.component.SingComponent
 import com.invoice.contratista.ui.screen.AuthenticationScreen
 import com.invoice.contratista.ui.screen.MainScreen
 import com.invoice.contratista.ui.theme.DarkColors

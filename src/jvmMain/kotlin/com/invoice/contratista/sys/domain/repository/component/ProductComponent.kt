@@ -33,8 +33,7 @@ class ProductComponent : KoinComponent {
         onError: (String) -> Unit
     ) = object : WebStatus<ProductInventoryModel> {
         override fun success(data: ProductInventoryModel) {
-            if (data != null) onSuccess.invoke(data)
-            else onError.invoke("Empty list")
+            onSuccess.invoke(data)
         }
 
         override fun error(e: String) {

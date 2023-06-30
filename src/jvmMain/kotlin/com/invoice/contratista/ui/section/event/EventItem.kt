@@ -15,7 +15,7 @@ import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 
 @ExperimentalMaterial3Api
 @Composable
-fun SetEventItem(
+fun EventItem(
     eventModel: EventModel,
     modifier: Modifier,
     eventSelected: (EventModel?) -> Unit

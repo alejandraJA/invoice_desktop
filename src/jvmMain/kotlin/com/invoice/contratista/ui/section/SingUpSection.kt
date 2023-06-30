@@ -13,7 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
-import com.invoice.contratista.sys.domain.usecase.SingComponent
+import com.invoice.contratista.sys.domain.repository.component.SingComponent
 import com.invoice.contratista.ui.custom.component.*
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen

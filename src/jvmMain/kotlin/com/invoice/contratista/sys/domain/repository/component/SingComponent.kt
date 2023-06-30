@@ -1,4 +1,4 @@
-package com.invoice.contratista.sys.domain.usecase
+package com.invoice.contratista.sys.domain.repository.component
 
 import com.invoice.contratista.data.repository.web.utils.WebStatus
 import com.invoice.contratista.data.source.local.UserLogged

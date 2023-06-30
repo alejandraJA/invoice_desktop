@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.EventModel
-import com.invoice.contratista.sys.domain.usecase.EventComponent
+import com.invoice.contratista.sys.domain.repository.component.EventComponent
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.theme.ModifierFieldImages
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun ShowEventsSection(
+fun EventLazy(
     eventComponent: EventComponent,
     eventSelected: (EventModel?) -> Unit,
     addEvent: () -> Unit
@@ -49,7 +49,7 @@ fun ShowEventsSection(
     }
     LazyColumn(modifier = Modifier.width(300.dp).padding(top = 8.dp)) {
         items(count = list.value.size) {
-            SetEventItem(
+            EventItem(
                 list.value[it],
                 modifier = if (it == list.value.size - 1) Modifier.padding(bottom = 16.dp)
                 else Modifier.padding(bottom = 8.dp),
