@@ -19,10 +19,8 @@ import com.invoice.contratista.data.source.web.models.response.ProductInventoryM
 import com.invoice.contratista.sys.domain.repository.component.ProductComponent
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
-import com.invoice.contratista.utils.AVAILABLE
-import com.invoice.contratista.utils.COST_LIST
-import com.invoice.contratista.utils.INVENTORY
-import com.invoice.contratista.utils.MODIFIED
+import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.utils.*
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
@@ -47,14 +45,16 @@ fun ProductInventorySection(idProduct: String) = Column {
     if (inventory.value != null) Column(modifier = Modifier.padding(top = 4.dp)) {
         Text(text = INVENTORY, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 4.dp))
         Row {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = AVAILABLE, modifier = alpha, style = typography)
-                Text(text = inventory.value!!.quantity.toString(), style = typography)
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = MODIFIED, modifier = alpha, style = typography)
-                Text(text = inventory.value!!.modified!!.timestamp.substring(0..9), style = typography)
-            }
+            TextWithTitle(
+                title = AVAILABLE,
+                text = inventory.value!!.quantity.toString(),
+                modifier = Modifier.weight(1f)
+            )
+            TextWithTitle(
+                title = MODIFIED,
+                text = inventory.value!!.modified!!.timestamp.substring(0..9),
+                modifier = Modifier.weight(1f)
+            )
         }
         Text(text = COST_LIST, modifier = alpha.padding(top = 4.dp), style = typography)
         CostLazy(inventory.value!!.costEntities)

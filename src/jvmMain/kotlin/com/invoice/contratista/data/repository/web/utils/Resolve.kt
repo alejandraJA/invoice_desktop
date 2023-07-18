@@ -19,8 +19,6 @@ class Resolve<T>(
             else {
                 return if (body.data == null) webStatus.error(UNEXPECTED_ERROR)
                 else webStatus.success(body.data)
-
-
             }
         } else {
             webStatus.error(UNEXPECTED_ERROR)

@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
+import com.invoice.contratista.ui.custom.component.items.TextWithTitle
 import com.invoice.contratista.ui.theme.Alpha
+import com.invoice.contratista.ui.theme.ModifierCard
 import com.invoice.contratista.ui.theme.ModifierFieldImagesSmall
 import com.invoice.contratista.utils.BUDGET
 import com.invoice.contratista.utils.DATE
@@ -37,46 +39,23 @@ fun BudgetData(
 
 @Composable
 fun ShowData(budgetEntity: BudgetEntity) = Column {
-    Row(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = BUDGET, style = MaterialTheme.typography.bodySmall, modifier = Alpha)
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource("drawables/number.svg"),
-                    modifier = ModifierFieldImagesSmall,
-                    contentDescription = ""
-                )
-                Text(text = budgetEntity.number.toString(), style = MaterialTheme.typography.bodyMedium)
-            }
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = DATE, style = MaterialTheme.typography.bodySmall, modifier = Alpha)
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource("drawables/date.svg"),
-                    modifier = ModifierFieldImagesSmall,
-                    contentDescription = ""
-                )
-                Text(text = budgetEntity.date, style = MaterialTheme.typography.bodySmall)
-            }
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = STATUS,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Alpha.padding(start = 16.dp),
-            )
-            Text(
-                text = budgetEntity.status,
-                modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
+    Row(modifier = ModifierCard) {
+        TextWithTitle(
+            title = BUDGET,
+            text = budgetEntity.number.toString(),
+            modifier = Modifier.weight(1f / 2).padding(end = 4.dp),
+            iconResource = "drawables/number.svg"
+        )
+        TextWithTitle(
+            title = DATE,
+            text = budgetEntity.date,
+            modifier = Modifier.weight(1f).padding(start = 4.dp, end = 4.dp),
+            iconResource = "drawables/date.svg"
+        )
+        TextWithTitle(
+            title = STATUS,
+            text = budgetEntity.status,
+            modifier = Modifier.weight(1f).padding(start = 4.dp),
+        )
     }
 }

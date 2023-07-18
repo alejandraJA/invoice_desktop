@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.Product
+import com.invoice.contratista.ui.custom.component.items.TextWithTitle
 import com.invoice.contratista.ui.theme.Alpha
 import com.invoice.contratista.ui.theme.ModifierCard
 import com.invoice.contratista.utils.*
@@ -22,22 +23,29 @@ fun ProductSection(product: Product) = Column(modifier = ModifierCard) {
     val typography = MaterialTheme.typography.bodySmall
     Row {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = PRODUCT_SERVICE, modifier = alpha, style = typography)
-            Text(text = product.productBase.description)
-            Text(text = UNIT_NAME, modifier = alpha, style = typography)
-            Text(text = product.productBase.unitName)
+            TextWithTitle(
+                title = PRODUCT_SERVICE,
+                text = product.productBase.description,
+            )
+            TextWithTitle(
+                title = UNIT_NAME,
+                text = product.productBase.unitName,
+            )
         }
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = PRODUCT_KEY, modifier = alpha, style = typography)
-            Text(text = product.productBase.productKey)
-            Text(text = SKU, modifier = alpha, style = typography)
-            Text(text = product.productBase.sku)
+            TextWithTitle(
+                title = PRODUCT_KEY,
+                text = product.productBase.productKey,
+            )
+            TextWithTitle(
+                title = SKU,
+                text = product.productBase.sku,
+            )
         }
     }
     Text(text = OTHERS, modifier = alpha, style = typography)
     Text(text = "- ${if (product.productBase.taxIncluded) TAX_INCLUDED else TAX_NOT_INCLUDED}")
     Text(text = "- ${getTaxability(product.productBase.taxability)}")
-
     Text(text = TAX, modifier = alpha, style = typography)
     TaxLazy(product.taxEntities)
     Text(text = PRICES, modifier = alpha, style = typography)
