@@ -25,24 +25,20 @@ fun CustomerDataSection(customerEntity: CustomerEntity) = Column(
             TextWithTitle(
                 title = TAX_IDENTIFICATION,
                 text = customerEntity.taxId,
-                modifier = Modifier.padding(top = 8.dp)
             )
             TextWithTitle(
                 title = FISCAL_REGIME,
                 text = customerEntity.taxSystem,
-                modifier = Modifier.padding(top = 8.dp)
             )
         }
         Column(modifier = Modifier.weight(1f)) {
             TextWithTitle(
                 title = EMAIL,
                 text = customerEntity.email,
-                modifier = Modifier.padding(top = 8.dp)
             )
             TextWithTitle(
                 title = PHONE,
                 text = customerEntity.phone,
-                modifier = Modifier.padding(top = 8.dp)
             )
         }
     }
