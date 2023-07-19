@@ -14,14 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.sys.domain.repository.component.SingComponent
-import com.invoice.contratista.ui.custom.component.*
+import com.invoice.contratista.ui.custom.component.ErrorDialog
+import com.invoice.contratista.ui.custom.component.LoadingDialog
+import com.invoice.contratista.ui.custom.component.TextField
+import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import com.invoice.contratista.utils.EMAIL_CANNOT_EQUALS_PASSWORD
 import com.invoice.contratista.utils.PASSWORD_NOT_MATCH
-import com.invoice.contratista.ui.custom.component.ErrorDialog
-import com.invoice.contratista.ui.custom.component.LoadingDialog
-import com.invoice.contratista.ui.custom.component.TextField
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -114,12 +114,12 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             // region Field Email
             TextField(
                 TextFieldModel(
-                    initField = "email2@email.com",
                     hint = "Email",
+                    change = onEmailChange,
                     placeholder = "Type your email",
+                    initField = mutableStateOf("email2@email.com"),
                     icon = "mail",
                     isRequired = true,
-                    change = onEmailChange,
                     externalError = errorEmail,
                 )
             )
@@ -127,13 +127,13 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             // region Field Password
             TextField(
                 TextFieldModel(
-                    initField = "ale.-112233",
                     hint = "Password",
+                    change = onPasswordChange,
                     placeholder = "Type your Password",
+                    initField = mutableStateOf("ale.-112233"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    change = onPasswordChange,
                     externalError = errorPassword,
                 )
             )
@@ -141,13 +141,13 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             // region Field Confirm Password
             TextField(
                 TextFieldModel(
-                    initField = "ale.-112233",
                     hint = "Password",
+                    change = onPasswordConfirmChange,
                     placeholder = "Confirm Password",
+                    initField = mutableStateOf("ale.-112233"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    change = onPasswordConfirmChange,
                     externalError = errorPassword,
                 )
             )

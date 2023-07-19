@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import com.invoice.contratista.sys.domain.repository.component.SingComponent
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
@@ -82,27 +84,30 @@ fun LoginSection(onLoggedUser: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val fieldPassword by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+                mutableStateOf(TextFieldValue(text = "ale.-112233"))
+            }
             Text(text = "Login now!", style = MaterialTheme.typography.titleLarge)
             TextField(
                 TextFieldModel(
-                    initField = "ale@email.com",
                     hint = "Email",
+                    change = onEmailChange,
                     placeholder = "Type your email",
+                    initField = mutableStateOf("ale@email.com"),
                     icon = "mail",
                     isRequired = true,
-                    change = onEmailChange,
                     externalError = errorEmail
                 )
             )
             TextField(
                 TextFieldModel(
-                    initField = "ale.-112233",
                     hint = "Password",
+                    change = onPasswordChange,
                     placeholder = "Type your Password",
+                    initField = mutableStateOf("ale@email.com"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    change = onPasswordChange,
                     externalError = errorPassword
                 )
             )

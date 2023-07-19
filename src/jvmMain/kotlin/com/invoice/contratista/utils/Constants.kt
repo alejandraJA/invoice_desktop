@@ -50,6 +50,11 @@ object Constants {
         Autorizado,
     }
 
+    enum class Format {
+        Money,
+        Text
+    }
+
     const val BASE_URL = "http://localhost:9191"
     const val AUTHORIZATION = "Authorization"
     const val ID_SCHEDULE = "idSchedule"

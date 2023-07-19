@@ -1,20 +1,15 @@
 package com.invoice.contratista.ui.section.budget
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
-import com.invoice.contratista.ui.theme.Alpha
 import com.invoice.contratista.ui.theme.ModifierCard
-import com.invoice.contratista.ui.theme.ModifierFieldImagesSmall
 import com.invoice.contratista.utils.BUDGET
 import com.invoice.contratista.utils.DATE
 import com.invoice.contratista.utils.STATUS
@@ -44,13 +39,13 @@ fun ShowData(budgetEntity: BudgetEntity) = Column {
             title = BUDGET,
             text = budgetEntity.number.toString(),
             modifier = Modifier.weight(1f / 2).padding(end = 4.dp),
-            iconResource = "drawables/number.svg"
+            iconResource = "drawables/number.svg",
         )
         TextWithTitle(
             title = DATE,
             text = budgetEntity.date,
             modifier = Modifier.weight(1f).padding(start = 4.dp, end = 4.dp),
-            iconResource = "drawables/date.svg"
+            iconResource = "drawables/date.svg",
         )
         TextWithTitle(
             title = STATUS,

@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.data.source.web.models.response.event.Product
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
 import com.invoice.contratista.ui.theme.Alpha
@@ -18,7 +19,7 @@ import com.invoice.contratista.utils.*
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun ProductSection(product: Product) = Column(modifier = ModifierCard) {
+fun ProductSection(product: Product, inventory: MutableState<ProductInventoryModel?>) = Column(modifier = ModifierCard) {
     val alpha = Alpha.padding(top = 4.dp)
     val typography = MaterialTheme.typography.bodySmall
     Row {
@@ -35,11 +36,11 @@ fun ProductSection(product: Product) = Column(modifier = ModifierCard) {
         Column(modifier = Modifier.weight(1f)) {
             TextWithTitle(
                 title = PRODUCT_KEY,
-                text = product.productBase.productKey,
+                text = product.productBase.productKey
             )
             TextWithTitle(
                 title = SKU,
-                text = product.productBase.sku,
+                text = product.productBase.sku
             )
         }
     }
@@ -51,6 +52,6 @@ fun ProductSection(product: Product) = Column(modifier = ModifierCard) {
     Text(text = PRICES, modifier = alpha, style = typography)
     PriceLazy(product.priceEntities)
 
-    ProductInventorySection(product.id)
+    ProductInventorySection(inventory)
 }
 

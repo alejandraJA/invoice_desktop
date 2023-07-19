@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
@@ -21,41 +20,41 @@ import com.invoice.contratista.utils.REQUIRED
 @ExperimentalMaterial3Api
 @Composable
 fun TextField(
-    textFieldModel: TextFieldModel
+    model: TextFieldModel
 ) {
-    var field by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(text = textFieldModel.initField))
-    }
 
-    val isFieldEmpty = field.text.isEmpty()
-    val hasError = textFieldModel.externalError.value.isNotEmpty()
-    val isRequiredAndEmpty = textFieldModel.isRequired && isFieldEmpty
+    val isFieldEmpty = model.field.text.isEmpty()
+    val hasError = model.externalError.value.isNotEmpty()
+    val isRequiredAndEmpty = model.isRequired && isFieldEmpty
     val isError = isRequiredAndEmpty || hasError
 
-    Column(modifier = textFieldModel.modifier) {
-        if (textFieldModel.initField.isNotEmpty()) {
-            textFieldModel.change.invoke(textFieldModel.initField)
+    Column(modifier = model.modifier) {
+        if (model.initField.value.isNotEmpty()) {
+            model.change.invoke(model.initField.value)
         }
 
         OutlinedTextField(
-            value = field,
+            value = model.field,
             onValueChange = { newValue ->
-                field = newValue
-                textFieldModel.change.invoke(newValue.text)
+                if (newValue.text != model.field.text) {
+                    model.initField.value = newValue.text
+                    model.field = newValue
+                    model.change.invoke(newValue.text)
+                }
             },
             label = {
-                val labelHint = "${textFieldModel.hint}${if (textFieldModel.isRequired) "*" else ""}"
+                val labelHint = "${model.hint}${if (model.isRequired) "*" else ""}"
                 Text(text = labelHint)
             },
-            placeholder = textFieldModel.placeholder.takeIf { it.isNotEmpty() }?.let {
+            placeholder = model.placeholder.takeIf { it.isNotEmpty() }?.let {
                 { Text(text = it) }
             },
             isError = isError,
-            leadingIcon = textFieldModel.icon.takeIf { it.isNotEmpty() }?.let { icon ->
+            leadingIcon = model.icon.takeIf { it.isNotEmpty() }?.let { icon ->
                 {
                     Icon(
                         painter = painterResource(resourcePath = "drawables/$icon.svg"),
-                        contentDescription = "${textFieldModel.hint} Icon",
+                        contentDescription = "${model.hint} Icon",
                         tint =
                         if (isError) MaterialTheme.colorScheme.error
                         else LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
@@ -63,30 +62,39 @@ fun TextField(
                     )
                 }
             },
-            trailingIcon = textFieldModel.isRequired.takeIf { isFieldEmpty }?.let {
+            trailingIcon = if (model.trailingIcon.isNotEmpty() && !(model.isRequired && isFieldEmpty)) {
                 {
                     Icon(
                         painter = painterResource(resourcePath = "drawables/high.svg"),
-                        contentDescription = "Error ${textFieldModel.hint}",
+                        contentDescription = "Error $model.hint",
                         tint = MaterialTheme.colorScheme.error,
                         modifier = ModifierFieldImages
                     )
                 }
-            },
-            visualTransformation = textFieldModel.visualTransformation,
-            modifier = textFieldModel.modifier
+            } else if (model.isRequired && isFieldEmpty) {
+                {
+                    Icon(
+                        painter = painterResource(resourcePath = "drawables/high.svg"),
+                        contentDescription = "Error $model.hint",
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = ModifierFieldImages
+                    )
+                }
+            } else null,
+            visualTransformation = model.visualTransformation,
+            modifier = model.modifier
         )
 
-        TextFieldErrorText(textFieldModel = textFieldModel, isRequiredAndEmpty = isRequiredAndEmpty)
+        TextFieldErrorText(textFieldModel = model, isRequiredAndEmpty = isRequiredAndEmpty)
 
-        if (textFieldModel.counterEnable) {
-            TextFieldCounterText(field = field, counterNumber = textFieldModel.counterNumber)
+        if (model.counterEnable) {
+            TextFieldCounterText(field = model.field, counterNumber = model.counterNumber)
         }
     }
 }
 
 @Composable
-fun TextFieldErrorText(
+private fun TextFieldErrorText(
     textFieldModel: TextFieldModel,
     isRequiredAndEmpty: Boolean
 ) {
@@ -100,7 +108,7 @@ fun TextFieldErrorText(
 }
 
 @Composable
-fun TextFieldCounterText(
+private fun TextFieldCounterText(
     field: TextFieldValue,
     counterNumber: Int
 ) {
@@ -116,12 +124,19 @@ class TextFieldModel(
     val hint: String,
     val change: (String) -> Unit,
     val placeholder: String = "",
-    val initField: String = "",
+    var initField: MutableState<String> = mutableStateOf(""),
     val modifier: Modifier = Modifier.fillMaxWidth(),
     val icon: String = HIGH,
     val isRequired: Boolean = false,
     val visualTransformation: VisualTransformation = VisualTransformation.None,
     val counterEnable: Boolean = false,
     val externalError: MutableState<String> = mutableStateOf(""),
-    val counterNumber: Int = 0
-)
+    val counterNumber: Int = 0,
+    val trailingIcon: String = ""
+) {
+    var field: TextFieldValue
+
+    init {
+        field = TextFieldValue(text = initField.value)
+    }
+}

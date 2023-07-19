@@ -20,4 +20,9 @@ object MoneyUtils {
      * @param rate Tasa del impuesto.
      */
     fun Double.getTax(rate: Double) = this * rate
+
+    /**
+     * Metodo para obtener el valor entero del impuesto
+     */
+    fun Double.getRate() = this * 100
 }
