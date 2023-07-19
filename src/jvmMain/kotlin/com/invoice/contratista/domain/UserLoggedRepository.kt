@@ -1,4 +1,4 @@
-package com.invoice.contratista.sys.domain.repository.local
+package com.invoice.contratista.domain
 
 import com.invoice.contratista.data.source.local.UserLogged
 import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest

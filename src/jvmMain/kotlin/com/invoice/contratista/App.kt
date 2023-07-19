@@ -11,9 +11,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import com.invoice.contratista.sys.di.appModule
-import com.invoice.contratista.sys.di.webModule
-import com.invoice.contratista.sys.domain.repository.component.SingComponent
+import com.invoice.contratista.di.appModule
+import com.invoice.contratista.di.webModule
+import com.invoice.contratista.service.SingService
 import com.invoice.contratista.ui.screen.AuthenticationScreen
 import com.invoice.contratista.ui.screen.MainScreen
 import com.invoice.contratista.ui.theme.DarkColors
@@ -28,15 +28,15 @@ import org.koin.core.context.startKoin
 @ExperimentalMaterial3Api
 @Composable
 fun InvoiceApp() {
-    val singComponent = SingComponent()
+    val singService = SingService()
     val scope = rememberCoroutineScope()
     val darkTheme by rememberSaveable { mutableStateOf(true) }
-    val isLoggedUser = remember { mutableStateOf(singComponent.isLoggedUser) }
+    val isLoggedUser = remember { mutableStateOf(singService.isLoggedUser) }
     val updateToken = remember { mutableStateOf(false) }
 
     scope.launch {
-        if (singComponent.isLoggedUser) {
-            singComponent.updateToken {
+        if (singService.isLoggedUser) {
+            singService.updateToken {
                 updateToken.value = true
             }
         }

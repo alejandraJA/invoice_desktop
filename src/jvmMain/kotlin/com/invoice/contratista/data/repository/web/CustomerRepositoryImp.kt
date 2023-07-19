@@ -4,7 +4,7 @@ package com.invoice.contratista.data.repository.web
 import com.invoice.contratista.data.source.web.models.response.ResponseApi
 import com.invoice.contratista.data.source.web.models.response.customer.CustomerResponse
 import com.invoice.contratista.data.source.web.retrofit.Service
-import com.invoice.contratista.sys.domain.repository.web.CustomerRepository
+import com.invoice.contratista.domain.CustomerRepository
 import retrofit2.Response
 
 class CustomerRepositoryImp(private val service: Service) : CustomerRepository {

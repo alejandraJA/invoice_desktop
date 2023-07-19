@@ -2,7 +2,7 @@ package com.invoice.contratista.data.repository.local
 
 import com.invoice.contratista.data.source.local.UserLogged
 import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
-import com.invoice.contratista.sys.domain.repository.local.UserLoggedRepository
+import com.invoice.contratista.domain.UserLoggedRepository
 import java.util.prefs.Preferences
 
 class LocalLoggedRepositoryImp : UserLoggedRepository {

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.EventModel
-import com.invoice.contratista.sys.domain.repository.component.EventComponent
+import com.invoice.contratista.service.EventService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.theme.ModifierFieldImages
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun EventLazy(
-    eventComponent: EventComponent,
+    eventService: EventService,
     eventSelected: (EventModel?) -> Unit,
     addEvent: () -> Unit
 ) {
@@ -33,7 +33,7 @@ fun EventLazy(
     val loadingDialogState = rememberSaveable { mutableStateOf(true) }
     val errorState = rememberSaveable { mutableStateOf("") }
     scope.launch {
-        eventComponent.getAll({
+        eventService.getAll({
             list.value = it
             loadingDialogState.value = false
         }, { errorState.value = it })

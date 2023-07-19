@@ -1,4 +1,4 @@
-package com.invoice.contratista.sys.domain.repository.web
+package com.invoice.contratista.domain
 
 import com.invoice.contratista.data.source.web.models.response.ResponseApi
 import com.invoice.contratista.data.source.web.models.response.customer.CustomerResponse

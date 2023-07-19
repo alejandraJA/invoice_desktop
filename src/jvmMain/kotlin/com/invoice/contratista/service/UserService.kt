@@ -1,8 +1,8 @@
-package com.invoice.contratista.sys.service
+package com.invoice.contratista.service
 
 import com.invoice.contratista.data.source.local.UserLogged
 import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
-import com.invoice.contratista.sys.domain.repository.local.UserLoggedRepository
+import com.invoice.contratista.domain.UserLoggedRepository
 
 class UserService(private val repository: UserLoggedRepository) {
 

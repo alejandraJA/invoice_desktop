@@ -1,15 +1,14 @@
-package com.invoice.contratista.sys.domain.repository.component
+package com.invoice.contratista.service
 
 import com.invoice.contratista.data.repository.web.utils.WebStatus
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.sys.domain.repository.web.ProductRepository
-import com.invoice.contratista.sys.service.UserService
+import com.invoice.contratista.domain.ProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ProductComponent : KoinComponent {
+class ProductService : KoinComponent {
     private val repository: ProductRepository by inject()
     private val userService: UserService by inject()
 

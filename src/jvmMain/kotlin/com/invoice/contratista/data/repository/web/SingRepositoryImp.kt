@@ -7,7 +7,7 @@ import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
 import com.invoice.contratista.data.source.web.models.response.TokenModel
 import com.invoice.contratista.data.source.web.models.response.UserModel
 import com.invoice.contratista.data.source.web.retrofit.Service
-import com.invoice.contratista.sys.domain.repository.web.SingRepository
+import com.invoice.contratista.domain.SingRepository
 
 class SingRepositoryImp(private val service: Service) : SingRepository {
     override suspend fun singIn(

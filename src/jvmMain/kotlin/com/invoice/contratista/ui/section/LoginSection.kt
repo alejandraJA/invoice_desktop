@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import com.invoice.contratista.sys.domain.repository.component.SingComponent
+import com.invoice.contratista.service.SingService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.TextField
@@ -35,7 +35,7 @@ fun LoginSection(onLoggedUser: () -> Unit) {
     val errorPassword = rememberSaveable { mutableStateOf("") }
     val errorEmail = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
-    val sing = SingComponent()
+    val sing = SingService()
     val loadingDialogState = rememberSaveable { mutableStateOf(false) }
     val errorState = rememberSaveable { mutableStateOf("") }
     val onError = { error: String ->

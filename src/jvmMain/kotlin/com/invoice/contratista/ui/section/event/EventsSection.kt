@@ -10,7 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
 import com.invoice.contratista.data.source.web.models.response.event.EventModel
-import com.invoice.contratista.sys.domain.repository.component.EventComponent
+import com.invoice.contratista.service.EventService
 import com.invoice.contratista.ui.section.budget.BudgetSection
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen2
 
@@ -25,12 +25,12 @@ fun EventsSection() = Column(
     val budgetSelected = { budgetEntity: BudgetEntity? ->
         budget.value = budgetEntity
     }
-    val eventComponent = EventComponent()
+    val eventService = EventService()
     if (addEvent.value) {
         EventAdd()
     } else {
         if (event.value == null) EventLazy(
-            eventComponent,
+            eventService,
             eventSelected = { event.value = it },
             addEvent = { addEvent.value = true }
         )

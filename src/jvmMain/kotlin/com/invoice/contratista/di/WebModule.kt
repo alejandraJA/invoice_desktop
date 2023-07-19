@@ -1,14 +1,14 @@
-package com.invoice.contratista.sys.di
+package com.invoice.contratista.di
 
 import com.invoice.contratista.data.repository.web.CustomerRepositoryImp
 import com.invoice.contratista.data.repository.web.EventRepositoryImp
 import com.invoice.contratista.data.repository.web.ProductRepositoryImp
 import com.invoice.contratista.data.repository.web.SingRepositoryImp
 import com.invoice.contratista.data.source.web.retrofit.Service
-import com.invoice.contratista.sys.domain.repository.web.CustomerRepository
-import com.invoice.contratista.sys.domain.repository.web.EventRepository
-import com.invoice.contratista.sys.domain.repository.web.ProductRepository
-import com.invoice.contratista.sys.domain.repository.web.SingRepository
+import com.invoice.contratista.domain.CustomerRepository
+import com.invoice.contratista.domain.EventRepository
+import com.invoice.contratista.domain.ProductRepository
+import com.invoice.contratista.domain.SingRepository
 import com.invoice.contratista.utils.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

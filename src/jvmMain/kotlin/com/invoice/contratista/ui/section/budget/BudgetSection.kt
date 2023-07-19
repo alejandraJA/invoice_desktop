@@ -17,7 +17,7 @@ import com.invoice.contratista.data.source.web.models.response.ProductInventoryM
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
 import com.invoice.contratista.data.source.web.models.response.event.CustomerEntity
 import com.invoice.contratista.data.source.web.models.response.event.PartEntity
-import com.invoice.contratista.sys.domain.repository.component.ProductComponent
+import com.invoice.contratista.service.ProductService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.section.CustomerDataSection
@@ -83,7 +83,7 @@ fun BudgetSection(
             PartLazy(budget.partEntities) { partEntity ->
                 part.value = partEntity
                 scope.launch {
-                    val component = ProductComponent()
+                    val component = ProductService()
                     component.findByProductId(partEntity.reserved.product.id, { inventoryModel ->
                         loadingDialogState.value = false
                         if (inventoryModel.costEntities.isNotEmpty())

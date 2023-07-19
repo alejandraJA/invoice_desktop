@@ -13,7 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
-import com.invoice.contratista.sys.domain.repository.component.SingComponent
+import com.invoice.contratista.service.SingService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.TextField
@@ -36,7 +36,7 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
     val errorPassword = rememberSaveable { mutableStateOf("") }
     val errorEmail = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
-    val sing = SingComponent()
+    val sing = SingService()
     val loadingDialogState = rememberSaveable { mutableStateOf(false) }
     val errorState = rememberSaveable { mutableStateOf("") }
     val onError = { error: String ->
