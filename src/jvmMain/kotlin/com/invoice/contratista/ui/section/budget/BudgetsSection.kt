@@ -11,26 +11,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
-import com.invoice.contratista.data.source.web.models.response.event.EventModel
+import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.theme.ModifierFieldImages
 import com.invoice.contratista.utils.ADD_BUDGET
 import com.invoice.contratista.utils.FILTER_LIST
 
 @ExperimentalMaterial3Api
 @Composable
-fun BudgetsSection(event: EventModel, modifier: Modifier, budgetSelected: (BudgetEntity) -> Unit) =
-    Column(modifier = modifier) {
-        Row {
-            ElevatedButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                Text(text = ADD_BUDGET)
-            }
-            ElevatedButton(onClick = {}, modifier = Modifier.padding(start = 8.dp)) {
-                Icon(
-                    painter = painterResource("drawables/filter_list.svg"), contentDescription = FILTER_LIST,
-                    modifier = ModifierFieldImages
-                )
-            }
+fun BudgetsSection(
+    modifier: Modifier,
+    eventViewModel: EventViewModel,
+) = Column(modifier = modifier) {
+    Row {
+        ElevatedButton(onClick = {}, modifier = Modifier.weight(1f)) {
+            Text(text = ADD_BUDGET)
         }
-        BudgetLazy(event.budgetEntities, budgetSelected)
+        ElevatedButton(onClick = {}, modifier = Modifier.padding(start = 8.dp)) {
+            Icon(
+                painter = painterResource("drawables/filter_list.svg"), contentDescription = FILTER_LIST,
+                modifier = ModifierFieldImages
+            )
+        }
     }
+    BudgetLazy(eventViewModel)
+}

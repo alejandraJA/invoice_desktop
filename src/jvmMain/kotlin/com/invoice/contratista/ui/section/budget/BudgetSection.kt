@@ -6,21 +6,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
-import com.invoice.contratista.data.source.web.models.response.event.CustomerEntity
-import com.invoice.contratista.data.source.web.models.response.event.PartEntity
-import com.invoice.contratista.service.ProductService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.section.CustomerDataSection
+import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.section.part.PartLazy
 import com.invoice.contratista.ui.section.part.PartSection
 import com.invoice.contratista.ui.theme.ModifierFieldImages
@@ -31,21 +25,15 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
-fun BudgetSection(
-    budget: BudgetEntity,
-    budgetSelected: (BudgetEntity?) -> Unit,
-    customer: CustomerEntity
-) = Column {
+fun BudgetSection(eventViewModel: EventViewModel) = Column {
     val scope = rememberCoroutineScope()
-    val loadingDialogState = rememberSaveable { mutableStateOf(true) }
-    val errorState = rememberSaveable { mutableStateOf("") }
-    val inventory = remember { mutableStateOf<ProductInventoryModel?>(null) }
-    val part = remember { mutableStateOf<PartEntity?>(null) }
-    if (budget.partEntities.isNotEmpty()) part.value = budget.partEntities[0]
+    val viewModel = remember { BudgetViewModel() }
+    if (eventViewModel.listParts.value.isNotEmpty())
+        viewModel.part.value = eventViewModel.listParts.value[0]
     Row {
         Row(modifier = Modifier.weight(0.5f)) {
             ElevatedButton(
-                onClick = { budgetSelected.invoke(null) },
+                onClick = { eventViewModel.budgetSelected.invoke(null) },
             ) {
                 Icon(
                     painter = painterResource("drawables/back.svg"),
@@ -75,29 +63,32 @@ fun BudgetSection(
     Row {
         Column(modifier = Modifier.weight(0.5f)) {
             // region Body Budget
-            BudgetData(budget, budgetSelected, false)
-            ElevatedCard(modifier = Modifier.padding(top = 4.dp)) { CustomerDataSection(customer) }
+            BudgetData(eventViewModel = eventViewModel, stateOnClick = false)
+            ElevatedCard(modifier = Modifier.padding(top = 4.dp)) {
+                eventViewModel.customer.value?.let {
+                    CustomerDataSection(it)
+                }
+            }
             ElevatedButton(onClick = {}, modifier = ModifierFill.padding(top = 4.dp, bottom = 4.dp)) {
                 Text(text = ADD_PART)
             }
-            PartLazy(budget.partEntities) { partEntity ->
-                part.value = partEntity
+            PartLazy(eventViewModel.listParts.value) { partEntity ->
                 scope.launch {
-                    val component = ProductService()
-                    component.findByProductId(partEntity.reserved.product.id, { inventoryModel ->
-                        loadingDialogState.value = false
-                        if (inventoryModel.costEntities.isNotEmpty())
-                            inventory.value = inventoryModel
-                    }, { errorState.value = it })
+                    viewModel.findByProductId(partEntity)
                 }
             }
             // endregion
         }
-        PartSection(part, modifier = Modifier.weight(1f), inventory = inventory)
+        viewModel.part.value?.let {
+            PartSection(
+                viewModel = viewModel,
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
-    LoadingDialog(show = loadingDialogState) { loadingDialogState.value = false }
-    ErrorDialog(errorState) {
-        errorState.value = ""
+    LoadingDialog(show = viewModel.loadingDialogState) { viewModel.loadingDialogState.value = false }
+    ErrorDialog(viewModel.errorState) {
+        viewModel.errorState.value = ""
     }
 }
 

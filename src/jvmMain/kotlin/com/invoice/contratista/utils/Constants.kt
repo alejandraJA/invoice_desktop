@@ -6,8 +6,8 @@ typealias ComposableFun = @Composable () -> Unit
 
 object Constants {
 
-
     enum class Status { Success, Failure, Loading }
+    enum class Authentication { SingIn, SingUp }
 
     enum class Priority {
         Low,

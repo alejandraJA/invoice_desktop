@@ -7,20 +7,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
-import com.invoice.contratista.service.SingService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
+import com.invoice.contratista.ui.section.auth.AuthenticationViewModel
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
+import com.invoice.contratista.utils.Constants
 import kotlinx.coroutines.launch
 
 
@@ -28,107 +27,66 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @Composable
 fun LoginSection(onLoggedUser: () -> Unit) {
-    // region logic
-    var email: String? = null
-    var password: String? = null
-
-    val errorPassword = rememberSaveable { mutableStateOf("") }
-    val errorEmail = rememberSaveable { mutableStateOf("") }
+    // region ViewModel
+    val viewModel = remember { AuthenticationViewModel() }
     val scope = rememberCoroutineScope()
-    val sing = SingService()
-    val loadingDialogState = rememberSaveable { mutableStateOf(false) }
-    val errorState = rememberSaveable { mutableStateOf("") }
-    val onError = { error: String ->
-        loadingDialogState.value = false
-        errorState.value = error
-    }
-
-    val onSuccessLogin = {
-        onLoggedUser.invoke()
-        loadingDialogState.value = false
-        errorState.value = ""
-    }
-    val onEmailChange = { change: String ->
-        email = change
-        errorPassword.value = ""
-        errorEmail.value = ""
-    }
-    val onPasswordChange = { change: String ->
-        password = change
-        errorPassword.value = ""
-        errorEmail.value = ""
-    }
-    val onLogin = { email: String, password: String ->
-        loadingDialogState.value = true
+    viewModel.auth = Constants.Authentication.SingIn
+    viewModel.onLoggedUser = onLoggedUser
+    viewModel.onLogin = { email: String, password: String ->
         scope.launch {
-            sing.login(email, password, onSuccessLogin, onError)
+            viewModel.login(email, password)
         }
     }
-    val onLogIn = {
-        email?.let { password?.let { it1 -> onLogin.invoke(it, it1) } }
-        errorPassword.value = ""
-        errorEmail.value = ""
-    }
-
-    val onLostYourPass = {
-        println("Lost yur pass")
-    }
-
     // endregion
-
-
-    // region ui
+    // region UI
     ElevatedCard {
         Column(
             modifier = ModifierPaddingScreen,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val fieldPassword by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-                mutableStateOf(TextFieldValue(text = "ale.-112233"))
-            }
             Text(text = "Login now!", style = MaterialTheme.typography.titleLarge)
             TextField(
                 TextFieldModel(
                     hint = "Email",
-                    change = onEmailChange,
+                    change = viewModel.onEmailChange,
                     placeholder = "Type your email",
                     initField = mutableStateOf("ale@email.com"),
                     icon = "mail",
                     isRequired = true,
-                    externalError = errorEmail
+                    externalError = viewModel.errorEmail
                 )
             )
             TextField(
                 TextFieldModel(
                     hint = "Password",
-                    change = onPasswordChange,
+                    change = viewModel.onPasswordChange,
                     placeholder = "Type your Password",
                     initField = mutableStateOf("ale@email.com"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    externalError = errorPassword
+                    externalError = viewModel.errorPassword
                 )
             )
             Row {
                 TextButton(
-                    onClick = onLostYourPass,
+                    onClick = viewModel.onLostYourPass,
                 ) {
                     Text("Lost your password?")
                 }
                 Spacer(Modifier.weight(1f))
                 Button(
-                    onClick = onLogIn,
+                    onClick = viewModel.onLogIn,
                 ) {
                     Text("Login")
                 }
             }
         }
     }
-    LoadingDialog(show = loadingDialogState) { loadingDialogState.value = false }
-    ErrorDialog(errorState) {
-        errorState.value = ""
+    LoadingDialog(show = viewModel.loadingDialogState) { viewModel.loadingDialogState.value = false }
+    ErrorDialog(viewModel.errorState) {
+        viewModel.errorState.value = ""
     }
     // endregion
 }

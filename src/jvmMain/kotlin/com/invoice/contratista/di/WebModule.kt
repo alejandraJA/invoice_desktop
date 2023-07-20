@@ -9,6 +9,9 @@ import com.invoice.contratista.domain.CustomerRepository
 import com.invoice.contratista.domain.EventRepository
 import com.invoice.contratista.domain.ProductRepository
 import com.invoice.contratista.domain.SingRepository
+import com.invoice.contratista.service.EventService
+import com.invoice.contratista.service.ProductService
+import com.invoice.contratista.service.SingService
 import com.invoice.contratista.utils.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -42,4 +45,7 @@ fun webModule() = module {
     factory<SingRepository> { SingRepositoryImp(get()) }
     factory<ProductRepository> { ProductRepositoryImp(get()) }
 
+    factory<ProductService> { ProductService(get(), get()) }
+    factory<EventService> { EventService(get(), get()) }
+    factory<SingService> { SingService(get(), get()) }
 }

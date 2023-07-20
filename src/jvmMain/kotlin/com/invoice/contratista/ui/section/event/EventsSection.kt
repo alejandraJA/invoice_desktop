@@ -1,16 +1,12 @@
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package com.invoice.contratista.ui.section.event
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
-import com.invoice.contratista.data.source.web.models.response.event.EventModel
-import com.invoice.contratista.service.EventService
 import com.invoice.contratista.ui.section.budget.BudgetSection
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen2
 
@@ -19,25 +15,16 @@ import com.invoice.contratista.ui.theme.ModifierPaddingScreen2
 fun EventsSection() = Column(
     modifier = ModifierPaddingScreen2.fillMaxHeight().fillMaxWidth(),
 ) {
-    val event = remember { mutableStateOf<EventModel?>(null) }
-    val addEvent = remember { mutableStateOf(false) }
-    val budget = remember { mutableStateOf<BudgetEntity?>(null) }
-    val budgetSelected = { budgetEntity: BudgetEntity? ->
-        budget.value = budgetEntity
-    }
-    val eventService = EventService()
-    if (addEvent.value) {
+    val viewModel = remember{ EventViewModel() }
+
+    if (viewModel.addEventIndicator.value) {
         EventAdd()
     } else {
-        if (event.value == null) EventLazy(
-            eventService,
-            eventSelected = { event.value = it },
-            addEvent = { addEvent.value = true }
-        )
+        if (viewModel.event.value == null) EventLazy(viewModel)
         else {
-            if (budget.value == null) EventSection(event.value!!, budgetSelected)
-            else BudgetSection(budget.value!!, budgetSelected, event.value!!.customerEntity)
+            if (viewModel.budget.value == null)
+                EventSection(viewModel)
+            else BudgetSection(viewModel)
         }
     }
-
 }

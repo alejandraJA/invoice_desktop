@@ -5,12 +5,11 @@ import com.invoice.contratista.data.source.web.models.response.event.EventModel
 import com.invoice.contratista.domain.EventRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class EventService : KoinComponent {
-    private val repository: EventRepository by inject()
-    private val userService: UserService by inject()
+class EventService(
+    private val repository: EventRepository,
+    private val userService: UserService
+) {
 
     private val isUserLogged: Boolean
         get() = userService.isLoggedUser()

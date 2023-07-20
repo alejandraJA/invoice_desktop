@@ -40,7 +40,7 @@ fun AuthenticationScreen(onLoggedUser: () -> Unit) = Column(
         HorizontalPager(modifier = Modifier.weight(1f), state = pagerState, pageCount = tabs.size) { page ->
             tabs[page].onSuccess = onLoggedUser
             tabs[page].screen()
-            Text("") // No se mostraba la ui
+            Text("")
         }
         Spacer(modifier = Modifier.weight(1f))
     }

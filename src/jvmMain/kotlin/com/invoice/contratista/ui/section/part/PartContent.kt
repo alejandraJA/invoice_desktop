@@ -3,19 +3,20 @@ package com.invoice.contratista.ui.section.part
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.CostEntity
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.data.source.web.models.response.event.PartEntity
 import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
-import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.custom.component.TextField
+import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.ui.section.budget.BudgetViewModel
 import com.invoice.contratista.ui.theme.*
 import com.invoice.contratista.utils.*
 import com.invoice.contratista.utils.MoneyUtils.getRate
@@ -25,31 +26,32 @@ import com.invoice.contratista.utils.MoneyUtils.moneyFormat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartContent(
-    inventory: MutableState<ProductInventoryModel?>,
-    part: MutableState<PartEntity?>,
+    viewModel: BudgetViewModel,
+//    inventory: MutableState<ProductInventoryModel?>,
+//    part: MutableState<PartEntity?>,
     modifier: Modifier
 ) = Column(modifier) {
     // region Internal Variables
     val sumTax: MutableState<Double>
     val restTax: MutableState<Double>
-    val cost: CostEntity? = if (inventory.value != null) {
-        inventory.value!!.costEntities.sortBy { it.date!!.timestamp.getDate() }
-        inventory.value!!.costEntities.last()
+    val cost: CostEntity? = if (viewModel.inventory.value != null) {
+        viewModel.inventory.value!!.costEntities.sortBy { it.date!!.timestamp.getDate() }
+        viewModel.inventory.value!!.costEntities.last()
     } else null
     val quantity = rememberSaveable {
-        if (part.value != null) mutableStateOf(part.value!!.quantity)
+        if (viewModel.part.value != null) mutableStateOf(viewModel.part.value!!.quantity)
         else mutableStateOf(0)
     }
     val discount = rememberSaveable {
-        if (part.value != null) mutableStateOf(part.value!!.discount)
+        if (viewModel.part.value != null) mutableStateOf(viewModel.part.value!!.discount)
         else mutableStateOf(0.0)
     }
     val subTotal = rememberSaveable {
-        if (part.value != null) mutableStateOf((part.value!!.reserved.price.unitPrice * part.value!!.quantity) - discount.value)
+        if (viewModel.part.value != null) mutableStateOf((viewModel.part.value!!.reserved.price.unitPrice * viewModel.part.value!!.quantity) - discount.value)
         else mutableStateOf(0.0)
     }
     val subTax: MutableState<List<TaxEntity>> =
-        mutableStateOf(if (part.value != null) part.value!!.reserved.product.taxEntities.filter { it.factor != EXENTO }
+        mutableStateOf(if (viewModel.part.value != null) viewModel.part.value!!.reserved.product.taxEntities.filter { it.factor != EXENTO }
         else emptyList())
     sumTax = mutableStateOf(subTax.value.sumOf {
         if (!it.withholding)
@@ -64,24 +66,24 @@ fun PartContent(
     val total = mutableStateOf((subTotal.value + sumTax.value - restTax.value))
     val totalGain = mutableStateOf(0.0)
     // endregion
-    Text(text = "$PART ${part.value!!.number}", style = MaterialTheme.typography.titleMedium)
+    Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
     // region Price and Gain
     ElevatedCard {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
             val unitCost = rememberSaveable { mutableStateOf(0.0) }
             if (cost != null) {
                 unitCost.value = cost.unitCost
-                totalGain.value = (part.value!!.reserved.price.unitPrice - unitCost.value) * quantity.value
+                totalGain.value = (viewModel.part.value!!.reserved.price.unitPrice - unitCost.value) * quantity.value
             }
             TextWithTitle(
                 title = PRICE,
-                text = "$ ${part.value!!.reserved.price.unitPrice.moneyFormat()}",
+                text = "$ ${viewModel.part.value!!.reserved.price.unitPrice.moneyFormat()}",
                 modifier = Modifier.padding(end = 4.dp).weight(1f),
             )
             Spacer(modifier = Modifier.width(8.dp).height(1.dp))
             TextWithTitle(
                 title = GAIN_FOR_UNIT,
-                text = "$ ${(part.value!!.reserved.price.unitPrice - unitCost.value).moneyFormat()}",
+                text = "$ ${(viewModel.part.value!!.reserved.price.unitPrice - unitCost.value).moneyFormat()}",
                 modifier = Modifier.padding(start = 4.dp).weight(1f),
             )
         }
@@ -121,7 +123,7 @@ fun PartContent(
             TextWithTitle(
                 title = AMOUNT,
                 text = "$ ${
-                    (part.value!!.reserved.price.unitPrice * quantity.value).moneyFormat()
+                    (viewModel.part.value!!.reserved.price.unitPrice * quantity.value).moneyFormat()
                 }",
                 modifier = Modifier.weight(1f),
             )
@@ -136,12 +138,12 @@ fun PartContent(
                 hint = DISCOUNT,
                 change = {
                     discount.value = it.ifEmpty { "0" }.toDouble()
-                    part.value!!.discount = discount.value
+                    viewModel.part.value!!.discount = discount.value
                     subTotal.value =
-                        ((part.value!!.reserved.price.unitPrice * quantity.value) - it.ifEmpty { "0" }
+                        ((viewModel.part.value!!.reserved.price.unitPrice * quantity.value) - it.ifEmpty { "0" }
                             .toDouble())
                 },
-                initField = mutableStateOf(part.value!!.discount.toInt().toString()),
+                initField = mutableStateOf(viewModel.part.value!!.discount.toInt().toString()),
                 icon = "money"
             )
             Column(modifier = Modifier.weight(1f)) {
@@ -180,8 +182,8 @@ fun PartContent(
                     }
                 }
             }
-            items(count = part.value!!.reserved.product.taxEntities.size) { position ->
-                val tax = part.value!!.reserved.product.taxEntities[position]
+            items(count = viewModel.part.value!!.reserved.product.taxEntities.size) { position ->
+                val tax = viewModel.part.value!!.reserved.product.taxEntities[position]
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Row(modifier = Modifier.weight(1f)) {
                         Spacer(modifier = Modifier.weight(1f))

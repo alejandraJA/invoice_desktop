@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.theme.ModifierCard
 import com.invoice.contratista.utils.BUDGET
 import com.invoice.contratista.utils.DATE
@@ -17,12 +18,12 @@ import com.invoice.contratista.utils.STATUS
 @ExperimentalMaterial3Api
 @Composable
 fun BudgetData(
-    budgetEntity: BudgetEntity,
-    budgetSelected: (BudgetEntity) -> Unit,
+    eventViewModel: EventViewModel,
+    budgetEntity: BudgetEntity = eventViewModel.budget.value!!,
     stateOnClick: Boolean = true
 ) {
     val onClick = {
-        budgetSelected.invoke(budgetEntity)
+        eventViewModel.budgetSelected.invoke(budgetEntity)
     }
     if (stateOnClick) ElevatedCard(onClick) {
         ShowData(budgetEntity)

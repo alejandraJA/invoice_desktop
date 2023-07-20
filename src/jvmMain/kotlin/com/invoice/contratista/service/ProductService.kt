@@ -5,13 +5,11 @@ import com.invoice.contratista.data.source.web.models.response.ProductInventoryM
 import com.invoice.contratista.domain.ProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class ProductService : KoinComponent {
-    private val repository: ProductRepository by inject()
-    private val userService: UserService by inject()
-
+class ProductService(
+    private val repository: ProductRepository,
+    private val userService: UserService
+) {
     private val isUserLogged: Boolean
         get() = userService.isLoggedUser()
     private val token: String?

@@ -13,7 +13,6 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.invoice.contratista.di.appModule
 import com.invoice.contratista.di.webModule
-import com.invoice.contratista.service.SingService
 import com.invoice.contratista.ui.screen.AuthenticationScreen
 import com.invoice.contratista.ui.screen.MainScreen
 import com.invoice.contratista.ui.theme.DarkColors
@@ -28,17 +27,13 @@ import org.koin.core.context.startKoin
 @ExperimentalMaterial3Api
 @Composable
 fun InvoiceApp() {
-    val singService = SingService()
+    val appViewModel = remember { AppViewModel() }
     val scope = rememberCoroutineScope()
     val darkTheme by rememberSaveable { mutableStateOf(true) }
-    val isLoggedUser = remember { mutableStateOf(singService.isLoggedUser) }
-    val updateToken = remember { mutableStateOf(false) }
 
     scope.launch {
-        if (singService.isLoggedUser) {
-            singService.updateToken {
-                updateToken.value = true
-            }
+        if (appViewModel.isLoggedUser.value) {
+            appViewModel.updateToken()
         }
     }
 
@@ -47,11 +42,11 @@ fun InvoiceApp() {
         typography = Typography,
     ) {
         Scaffold {
-            if (isLoggedUser.value) {
-                if (updateToken.value) MainScreen()
+            if (appViewModel.isLoggedUser.value) {
+                if (appViewModel.updateToken.value) MainScreen()
             } else {
                 AuthenticationScreen(onLoggedUser = {
-                    isLoggedUser.value = true
+                    appViewModel.isLoggedUser.value = true
                 })
             }
         }

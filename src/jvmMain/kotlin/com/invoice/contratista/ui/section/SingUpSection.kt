@@ -9,98 +9,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.invoice.contratista.data.source.web.models.request.SingRequest
-import com.invoice.contratista.service.SingService
 import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
+import com.invoice.contratista.ui.section.auth.AuthenticationViewModel
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
-import com.invoice.contratista.utils.EMAIL_CANNOT_EQUALS_PASSWORD
-import com.invoice.contratista.utils.PASSWORD_NOT_MATCH
+import com.invoice.contratista.utils.Constants
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun SingUpSection(onLoggedUser: () -> Unit) {
-    // region logic
-    val email = rememberSaveable { mutableStateOf("") }
-    val password = rememberSaveable { mutableStateOf("") }
-    val passwordConfirm = rememberSaveable { mutableStateOf("") }
-    val checkState = remember { mutableStateOf(true) }
-    val errorPassword = rememberSaveable { mutableStateOf("") }
-    val errorEmail = rememberSaveable { mutableStateOf("") }
+    // region ViewModel
+    val viewModel = remember { AuthenticationViewModel() }
     val scope = rememberCoroutineScope()
-    val sing = SingService()
-    val loadingDialogState = rememberSaveable { mutableStateOf(false) }
-    val errorState = rememberSaveable { mutableStateOf("") }
-    val onError = { error: String ->
-        loadingDialogState.value = false
-        errorState.value = error
-    }
-
-    val onSuccessLogin = {
-        onLoggedUser.invoke()
-        loadingDialogState.value = false
-        errorState.value = ""
-    }
-
-    val onEmailChange = { change: String ->
-        email.value = change
-        errorEmail.value =
-            if (email.value == password.value)
-                EMAIL_CANNOT_EQUALS_PASSWORD
-            else ""
-    }
-
-    val onPasswordChange = { change: String ->
-        password.value = change
-        errorEmail.value =
-            if (email.value == password.value)
-                EMAIL_CANNOT_EQUALS_PASSWORD
-            else ""
-        errorPassword.value =
-            if (password.value != passwordConfirm.value)
-                PASSWORD_NOT_MATCH
-            else
-                ""
-    }
-
-    val onPasswordConfirmChange = { change: String ->
-        passwordConfirm.value = change
-        errorEmail.value =
-            if (email.value == password.value)
-                EMAIL_CANNOT_EQUALS_PASSWORD
-            else ""
-        errorPassword.value =
-            if (password.value != passwordConfirm.value)
-                PASSWORD_NOT_MATCH
-            else
-                ""
-
-    }
-
+    viewModel.onLoggedUser = onLoggedUser
+    viewModel.auth = Constants.Authentication.SingUp
     val singUp = { request: SingRequest ->
-        loadingDialogState.value = true
         scope.launch {
-            sing.singUp(request = request, {
-                scope.launch {
-                    sing.login(
-                        email = request.username!!,
-                        password = request.password!!,
-                        onSuccess = onSuccessLogin,
-                        onError = onError
-                    )
-                }
-            }, onError)
+            viewModel.singUp(request)
         }
     }
-
     // endregion
 
     // region UI
@@ -115,12 +50,12 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             TextField(
                 TextFieldModel(
                     hint = "Email",
-                    change = onEmailChange,
+                    change = viewModel.onEmailChange,
                     placeholder = "Type your email",
                     initField = mutableStateOf("email2@email.com"),
                     icon = "mail",
                     isRequired = true,
-                    externalError = errorEmail,
+                    externalError = viewModel.errorEmail,
                 )
             )
             // endregion
@@ -128,13 +63,13 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             TextField(
                 TextFieldModel(
                     hint = "Password",
-                    change = onPasswordChange,
+                    change = viewModel.onPasswordChange,
                     placeholder = "Type your Password",
                     initField = mutableStateOf("ale.-112233"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    externalError = errorPassword,
+                    externalError = viewModel.errorPassword,
                 )
             )
             // endregion
@@ -142,22 +77,22 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             TextField(
                 TextFieldModel(
                     hint = "Password",
-                    change = onPasswordConfirmChange,
+                    change = viewModel.onPasswordConfirmChange,
                     placeholder = "Confirm Password",
                     initField = mutableStateOf("ale.-112233"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    externalError = errorPassword,
+                    externalError = viewModel.errorPassword,
                 )
             )
             // endregion
             // region Check terms
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
-                    checked = checkState.value,
+                    checked = viewModel.checkState.value,
                     onCheckedChange = {
-                        checkState.value = it
+                        viewModel.checkState.value = it
                     }
                 )
                 Text(text = "I agree with privacy policy")
@@ -165,12 +100,13 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             // endregion
             // region Button SingUp
             Button(
-                onClick = { singUp.invoke(SingRequest(email.value, password.value)) },
+                onClick = { singUp.invoke(SingRequest(viewModel.email.value, viewModel.password.value)) },
                 modifier = ModifierFill,
-                enabled = checkState.value && (email.value.isNotEmpty()
-                        && password.value.isNotEmpty() && passwordConfirm.value.isNotEmpty())
-                        && (password.value == passwordConfirm.value
-                        && email.value != password.value)
+                enabled = viewModel.checkState.value && (viewModel.email.value.isNotEmpty()
+                        && viewModel.password.value.isNotEmpty()
+                        && viewModel.passwordConfirm.value.isNotEmpty())
+                        && (viewModel.password.value == viewModel.passwordConfirm.value
+                        && viewModel.email.value != viewModel.password.value)
             ) {
                 Text("Sing Up")
             }
@@ -178,8 +114,8 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
             // endregion
         }
     }
-    LoadingDialog(show = loadingDialogState) { loadingDialogState.value = false }
-    ErrorDialog(errorState) {
-        errorState.value = ""
+    LoadingDialog(show = viewModel.loadingDialogState) { viewModel.loadingDialogState.value = false }
+    ErrorDialog(viewModel.errorState) {
+        viewModel.errorState.value = ""
     }
 }

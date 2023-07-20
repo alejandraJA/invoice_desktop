@@ -9,15 +9,12 @@ import com.invoice.contratista.data.source.web.models.response.UserModel
 import com.invoice.contratista.domain.SingRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import kotlin.coroutines.CoroutineContext
 
-class SingService() : KoinComponent {
-
-    private val repository: SingRepository by inject()
-    private val userService: UserService by inject()
-
+class SingService(
+    private val repository: SingRepository,
+    private val userService: UserService
+) {
     val isLoggedUser: Boolean get() = userService.isLoggedUser()
 
     suspend fun updateToken(success: () -> Unit) = withContext(Dispatchers.IO) {

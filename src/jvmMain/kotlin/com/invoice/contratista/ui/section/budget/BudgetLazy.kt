@@ -8,21 +8,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
+import com.invoice.contratista.ui.section.event.EventViewModel
 
 @ExperimentalMaterial3Api
 @Composable
-fun BudgetLazy(budgetEntities: List<BudgetEntity>, budgetSelected: (BudgetEntity) -> Unit) {
+fun BudgetLazy(
+    eventViewModel: EventViewModel
+) {
     LazyVerticalGrid(
         modifier = Modifier.padding(top = 8.dp),
         columns = GridCells.Fixed(3),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        items(count = budgetEntities.size) {
-            val budgetEntity = budgetEntities[it]
-            BudgetData(budgetEntity, budgetSelected)
+        items(count = eventViewModel.budgetList.value.size) {
+            BudgetData(eventViewModel, budgetEntity = eventViewModel.budgetList.value[it])
         }
     }
 }
-
