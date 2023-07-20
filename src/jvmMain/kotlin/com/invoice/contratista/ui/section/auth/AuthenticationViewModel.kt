@@ -103,6 +103,8 @@ class AuthenticationViewModel : KoinComponent {
         singService.login(email, password, onSuccessLogin, onError)
     }
 
+    fun logout() = singService.logout()
+
     val onLostYourPass = {
         println("Lost yur pass")
 
