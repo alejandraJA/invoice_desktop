@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 fun BudgetSection(eventViewModel: EventViewModel) = Column {
     val scope = rememberCoroutineScope()
     val viewModel = remember { BudgetViewModel() }
-    if (eventViewModel.listParts.value.isNotEmpty())
+    if (eventViewModel.listParts.value.isNotEmpty() && viewModel.part.value == null)
         viewModel.part.value = eventViewModel.listParts.value[0]
     Row {
         Row(modifier = Modifier.weight(0.5f)) {
@@ -81,7 +81,8 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
         }
         viewModel.part.value?.let {
             PartSection(
-                viewModel = viewModel,
+                part = viewModel.part,
+                inventory = viewModel.inventory,
                 modifier = Modifier.weight(1f),
             )
         }

@@ -6,13 +6,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.CostEntity
-import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
+import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
+import com.invoice.contratista.data.source.web.models.response.event.PartEntity
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
@@ -26,64 +27,33 @@ import com.invoice.contratista.utils.MoneyUtils.moneyFormat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartContent(
-    viewModel: BudgetViewModel,
-//    inventory: MutableState<ProductInventoryModel?>,
-//    part: MutableState<PartEntity?>,
+    inventory: MutableState<ProductInventoryModel?>,
+    part: MutableState<PartEntity?>,
     modifier: Modifier
 ) = Column(modifier) {
     // region Internal Variables
-    val sumTax: MutableState<Double>
-    val restTax: MutableState<Double>
-    val cost: CostEntity? = if (viewModel.inventory.value != null) {
-        viewModel.inventory.value!!.costEntities.sortBy { it.date!!.timestamp.getDate() }
-        viewModel.inventory.value!!.costEntities.last()
-    } else null
-    val quantity = rememberSaveable {
-        if (viewModel.part.value != null) mutableStateOf(viewModel.part.value!!.quantity)
-        else mutableStateOf(0)
-    }
-    val discount = rememberSaveable {
-        if (viewModel.part.value != null) mutableStateOf(viewModel.part.value!!.discount)
-        else mutableStateOf(0.0)
-    }
-    val subTotal = rememberSaveable {
-        if (viewModel.part.value != null) mutableStateOf((viewModel.part.value!!.reserved.price.unitPrice * viewModel.part.value!!.quantity) - discount.value)
-        else mutableStateOf(0.0)
-    }
-    val subTax: MutableState<List<TaxEntity>> =
-        mutableStateOf(if (viewModel.part.value != null) viewModel.part.value!!.reserved.product.taxEntities.filter { it.factor != EXENTO }
-        else emptyList())
-    sumTax = mutableStateOf(subTax.value.sumOf {
-        if (!it.withholding)
-            if (it.factor == CUOTA) it.rate * quantity.value else subTotal.value.getTax(it.rate)
-        else 0.0
-    })
-    restTax = mutableStateOf(subTax.value.sumOf {
-        if (it.withholding)
-            if (it.factor == CUOTA) it.rate * quantity.value else subTotal.value.getTax(it.rate)
-        else 0.0
-    })
-    val total = mutableStateOf((subTotal.value + sumTax.value - restTax.value))
-    val totalGain = mutableStateOf(0.0)
+    val viewModel = remember { PartViewModel() }
+    viewModel.onChange(inventory, part)
     // endregion
-    Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
+    Text(text = "$PART ${part.value!!.number}", style = MaterialTheme.typography.titleMedium)
     // region Price and Gain
     ElevatedCard {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
             val unitCost = rememberSaveable { mutableStateOf(0.0) }
-            if (cost != null) {
-                unitCost.value = cost.unitCost
-                totalGain.value = (viewModel.part.value!!.reserved.price.unitPrice - unitCost.value) * quantity.value
+            if (viewModel.cost.value != null) {
+                unitCost.value = viewModel.cost.value!!.unitCost
+                viewModel.totalGain.value =
+                    (part.value!!.reserved.price.unitPrice - unitCost.value) * viewModel.quantity.value
             }
             TextWithTitle(
                 title = PRICE,
-                text = "$ ${viewModel.part.value!!.reserved.price.unitPrice.moneyFormat()}",
+                text = "$ ${part.value!!.reserved.price.unitPrice.moneyFormat()}",
                 modifier = Modifier.padding(end = 4.dp).weight(1f),
             )
             Spacer(modifier = Modifier.width(8.dp).height(1.dp))
             TextWithTitle(
                 title = GAIN_FOR_UNIT,
-                text = "$ ${(viewModel.part.value!!.reserved.price.unitPrice - unitCost.value).moneyFormat()}",
+                text = "$ ${(part.value!!.reserved.price.unitPrice - unitCost.value).moneyFormat()}",
                 modifier = Modifier.padding(start = 4.dp).weight(1f),
             )
         }
@@ -101,7 +71,7 @@ fun PartContent(
                 modifier = ModifierCard.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { quantity.value-- }, modifier = ModifierFieldImages) {
+                IconButton(onClick = { viewModel.quantity.value-- }, modifier = ModifierFieldImages) {
                     Icon(
                         painter = painterResource("drawables/remove.svg"),
                         modifier = ModifierFieldImagesSmall,
@@ -109,9 +79,9 @@ fun PartContent(
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = quantity.value.toString())
+                Text(text = viewModel.quantity.value.toString())
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { quantity.value++ }, modifier = ModifierFieldImages) {
+                IconButton(onClick = { viewModel.quantity.value++ }, modifier = ModifierFieldImages) {
                     Icon(
                         painter = painterResource("drawables/add.svg"),
                         modifier = ModifierFieldImagesSmall,
@@ -123,7 +93,7 @@ fun PartContent(
             TextWithTitle(
                 title = AMOUNT,
                 text = "$ ${
-                    (viewModel.part.value!!.reserved.price.unitPrice * quantity.value).moneyFormat()
+                    (part.value!!.reserved.price.unitPrice * viewModel.quantity.value).moneyFormat()
                 }",
                 modifier = Modifier.weight(1f),
             )
@@ -137,13 +107,13 @@ fun PartContent(
             val model = TextFieldModel(
                 hint = DISCOUNT,
                 change = {
-                    discount.value = it.ifEmpty { "0" }.toDouble()
-                    viewModel.part.value!!.discount = discount.value
-                    subTotal.value =
-                        ((viewModel.part.value!!.reserved.price.unitPrice * quantity.value) - it.ifEmpty { "0" }
+                    viewModel.discount.value = it.ifEmpty { "0" }.toDouble()
+                    part.value!!.discount = viewModel.discount.value
+                    viewModel.subTotal.value =
+                        ((part.value!!.reserved.price.unitPrice * viewModel.quantity.value) - it.ifEmpty { "0" }
                             .toDouble())
                 },
-                initField = mutableStateOf(viewModel.part.value!!.discount.toInt().toString()),
+                initField = mutableStateOf(part.value!!.discount.toInt().toString()),
                 icon = "money"
             )
             Column(modifier = Modifier.weight(1f)) {
@@ -155,7 +125,7 @@ fun PartContent(
             TextWithTitle(
                 title = SUB_TOTAL,
                 modifier = Modifier.weight(1f),
-                doubleMutableState = subTotal,
+                doubleMutableState = viewModel.subTotal,
                 format = Constants.Format.Money
             )
         }
@@ -178,12 +148,12 @@ fun PartContent(
                             modifier = ModifierFieldImages
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Text(text = subTotal.value.moneyFormat())
+                        Text(text = viewModel.subTotal.value.moneyFormat())
                     }
                 }
             }
-            items(count = viewModel.part.value!!.reserved.product.taxEntities.size) { position ->
-                val tax = viewModel.part.value!!.reserved.product.taxEntities[position]
+            items(count = part.value!!.reserved.product.taxEntities.size) { position ->
+                val tax = part.value!!.reserved.product.taxEntities[position]
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Row(modifier = Modifier.weight(1f)) {
                         Spacer(modifier = Modifier.weight(1f))
@@ -207,8 +177,8 @@ fun PartContent(
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
                             text = (
-                                    if (tax.factor == CUOTA) tax.rate * quantity.value
-                                    else subTotal.value.getTax(tax.rate)
+                                    if (tax.factor == CUOTA) tax.rate * viewModel.quantity.value
+                                    else viewModel.subTotal.value.getTax(tax.rate)
                                     ).moneyFormat(),
                             modifier = if (tax.factor == EXENTO) Alpha else Modifier
                         )
@@ -231,7 +201,7 @@ fun PartContent(
                             modifier = ModifierFieldImages
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Text(text = total.value.moneyFormat())
+                        Text(text = viewModel.total.value.moneyFormat())
                     }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -246,7 +216,7 @@ fun PartContent(
                             modifier = ModifierFieldImages
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Text(text = totalGain.value.moneyFormat(), modifier = Alpha)
+                        Text(text = viewModel.totalGain.value.moneyFormat(), modifier = Alpha)
                     }
                 }
             }
