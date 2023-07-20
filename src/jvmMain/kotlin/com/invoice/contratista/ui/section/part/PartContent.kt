@@ -4,20 +4,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.data.source.web.models.response.event.PartEntity
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
-import com.invoice.contratista.ui.section.budget.BudgetViewModel
 import com.invoice.contratista.ui.theme.*
 import com.invoice.contratista.utils.*
 import com.invoice.contratista.utils.MoneyUtils.getRate
@@ -27,33 +21,22 @@ import com.invoice.contratista.utils.MoneyUtils.moneyFormat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartContent(
-    inventory: MutableState<ProductInventoryModel?>,
-    part: MutableState<PartEntity?>,
+    viewModel: PartViewModel,
     modifier: Modifier
 ) = Column(modifier) {
-    // region Internal Variables
-    val viewModel = remember { PartViewModel() }
-    viewModel.onChange(inventory, part)
-    // endregion
-    Text(text = "$PART ${part.value!!.number}", style = MaterialTheme.typography.titleMedium)
+    Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
     // region Price and Gain
     ElevatedCard {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
-            val unitCost = rememberSaveable { mutableStateOf(0.0) }
-            if (viewModel.cost.value != null) {
-                unitCost.value = viewModel.cost.value!!.unitCost
-                viewModel.totalGain.value =
-                    (part.value!!.reserved.price.unitPrice - unitCost.value) * viewModel.quantity.value
-            }
             TextWithTitle(
                 title = PRICE,
-                text = "$ ${part.value!!.reserved.price.unitPrice.moneyFormat()}",
+                text = "$ ${viewModel.part.value!!.reserved.price.unitPrice.moneyFormat()}",
                 modifier = Modifier.padding(end = 4.dp).weight(1f),
             )
             Spacer(modifier = Modifier.width(8.dp).height(1.dp))
             TextWithTitle(
                 title = GAIN_FOR_UNIT,
-                text = "$ ${(part.value!!.reserved.price.unitPrice - unitCost.value).moneyFormat()}",
+                text = "$ ${viewModel.gainForUnit.value.moneyFormat()}",
                 modifier = Modifier.padding(start = 4.dp).weight(1f),
             )
         }
@@ -71,7 +54,7 @@ fun PartContent(
                 modifier = ModifierCard.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { viewModel.quantity.value-- }, modifier = ModifierFieldImages) {
+                IconButton(onClick = viewModel.onDecrementQuantity(), modifier = ModifierFieldImages) {
                     Icon(
                         painter = painterResource("drawables/remove.svg"),
                         modifier = ModifierFieldImagesSmall,
@@ -81,7 +64,7 @@ fun PartContent(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(text = viewModel.quantity.value.toString())
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { viewModel.quantity.value++ }, modifier = ModifierFieldImages) {
+                IconButton(onClick = viewModel.onIncrementQuantity(), modifier = ModifierFieldImages) {
                     Icon(
                         painter = painterResource("drawables/add.svg"),
                         modifier = ModifierFieldImagesSmall,
@@ -93,7 +76,7 @@ fun PartContent(
             TextWithTitle(
                 title = AMOUNT,
                 text = "$ ${
-                    (part.value!!.reserved.price.unitPrice * viewModel.quantity.value).moneyFormat()
+                    viewModel.amount.value.moneyFormat()
                 }",
                 modifier = Modifier.weight(1f),
             )
@@ -106,21 +89,11 @@ fun PartContent(
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
             val model = TextFieldModel(
                 hint = DISCOUNT,
-                change = {
-                    viewModel.discount.value = it.ifEmpty { "0" }.toDouble()
-                    part.value!!.discount = viewModel.discount.value
-                    viewModel.subTotal.value =
-                        ((part.value!!.reserved.price.unitPrice * viewModel.quantity.value) - it.ifEmpty { "0" }
-                            .toDouble())
-                },
-                initField = mutableStateOf(part.value!!.discount.toInt().toString()),
+                change = viewModel.onChangeDiscount(),
+                initField = mutableStateOf(viewModel.part.value!!.discount.toInt().toString()),
                 icon = "money"
             )
-            Column(modifier = Modifier.weight(1f)) {
-                TextField(
-                    model = model
-                )
-            }
+            Column(modifier = Modifier.weight(1f)) { TextField(model = model) }
             Spacer(modifier = Modifier.width(8.dp).height(1.dp))
             TextWithTitle(
                 title = SUB_TOTAL,
@@ -152,8 +125,8 @@ fun PartContent(
                     }
                 }
             }
-            items(count = part.value!!.reserved.product.taxEntities.size) { position ->
-                val tax = part.value!!.reserved.product.taxEntities[position]
+            items(count = viewModel.part.value!!.reserved.product.taxEntities.size) { position ->
+                val tax = viewModel.part.value!!.reserved.product.taxEntities[position]
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Row(modifier = Modifier.weight(1f)) {
                         Spacer(modifier = Modifier.weight(1f))

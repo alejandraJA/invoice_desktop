@@ -7,6 +7,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
@@ -22,7 +23,9 @@ fun PartSection(
     inventory: MutableState<ProductInventoryModel?>,
     modifier: Modifier
 ) = Row(modifier = modifier.padding(start = 8.dp)) {
-    PartContent(inventory, part, modifier = Modifier.weight(1f))
+    val viewModel = remember { PartViewModel() }
+    viewModel.setPart(inventory, part)
+    PartContent(viewModel = viewModel, modifier = Modifier.weight(1f))
     ElevatedCard(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
         ProductSection(part.value!!.reserved.product, inventory)
     }
