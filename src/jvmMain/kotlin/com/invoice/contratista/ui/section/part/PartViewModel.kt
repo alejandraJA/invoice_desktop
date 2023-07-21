@@ -36,21 +36,26 @@ class PartViewModel : KoinComponent {
             inventory.value!!.costEntities.sortBy { it.date!!.timestamp.getDate() }
             inventory.value!!.costEntities.last()
         } else null
+        calculate(part)
+    }
 
+    fun calculate(part: MutableState<PartEntity?>) {
+        this.part.value = part.value
         quantity.value =
-            if (part.value != null) part.value!!.quantity
+            if (this.part.value != null) this.part.value!!.quantity
             else 0
 
         _discount.value =
-            if (part.value != null) part.value!!.discount
+            if (this.part.value != null) this.part.value!!.discount
             else 0.0
 
         subTotal.value =
-            if (part.value != null) (part.value!!.reserved.price.unitPrice * part.value!!.quantity) - _discount.value
+            if (this.part.value != null)
+                (this.part.value!!.reserved.price.unitPrice * this.part.value!!.quantity) - _discount.value
             else 0.0
 
         _subTax.value =
-            if (part.value != null) part.value!!.reserved.product.taxEntities.filter { it.factor != EXENTO }
+            if (this.part.value != null) this.part.value!!.reserved.product.taxEntities.filter { it.factor != EXENTO }
             else emptyList()
 
         _sumTax.value = _subTax.value.sumOf {
@@ -65,10 +70,10 @@ class PartViewModel : KoinComponent {
         }
         total.value = (subTotal.value + _sumTax.value - _restTax.value)
         if (_cost.value != null) {
-            gainForUnit.value = part.value!!.reserved.price.unitPrice - _cost.value!!.unitCost
+            gainForUnit.value = this.part.value!!.reserved.price.unitPrice - _cost.value!!.unitCost
             totalGain.value = gainForUnit.value * quantity.value
         }
-        amount.value = part.value!!.reserved.price.unitPrice * quantity.value
+        amount.value = this.part.value!!.reserved.price.unitPrice * quantity.value
     }
 
     fun onIncrementQuantity(): () -> Unit = {
@@ -80,6 +85,7 @@ class PartViewModel : KoinComponent {
         quantity.value--
         if (part.value != null) part.value!!.quantity--
     }
+
     fun onChangeDiscount(): (String) -> Unit = {
         _discount.value = it.ifEmpty { "0" }.toDouble()
         part.value!!.discount = _discount.value
