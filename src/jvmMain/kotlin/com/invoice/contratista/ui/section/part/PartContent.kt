@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.invoice.contratista.ui.custom.component.MoneyText
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
@@ -83,7 +84,7 @@ fun PartContent(
         }
     }
     //endregion
-    // region Discount
+    // region Discount and Subtotal
     Text(text = SUB_TOTAL, modifier = Alpha.padding(top = 8.dp), style = MaterialTheme.typography.bodySmall)
     ElevatedCard {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
@@ -109,89 +110,34 @@ fun PartContent(
     ElevatedCard {
         LazyColumn(modifier = ModifierCard) {
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = SUB_TOTAL, style = MaterialTheme.typography.bodySmall)
-                    }
-                    Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource("drawables/money.svg"),
-                            contentDescription = "money",
-                            modifier = ModifierFieldImages
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = viewModel.subTotal.value.moneyFormat())
-                    }
-                }
+                MoneyText(
+                    indicator = SUB_TOTAL,
+                    money = viewModel.subTotal.value,
+                )
             }
             items(count = viewModel.part.value!!.reserved.product.taxEntities.size) { position ->
                 val tax = viewModel.part.value!!.reserved.product.taxEntities[position]
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = "${tax.type} (${tax.rate.getRate()} %)",
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = if (tax.factor == EXENTO) Alpha else Modifier
-                        )
-                        Text(
-                            text = tax.factor,
-                            modifier = Alpha.padding(start = 4.dp),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                    Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource("drawables/money.svg"),
-                            contentDescription = "money",
-                            modifier = ModifierFieldImages
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = (
-                                    if (tax.factor == CUOTA) tax.rate * viewModel.quantity.value
-                                    else viewModel.subTotal.value.getTax(tax.rate)
-                                    ).moneyFormat(),
-                            modifier = if (tax.factor == EXENTO) Alpha else Modifier
-                        )
-                    }
-                }
+                MoneyText(
+                    indicator = "${tax.type} (${tax.rate.getRate()} %)",
+                    money = if (tax.factor == CUOTA) tax.rate * viewModel.quantity.value
+                    else viewModel.subTotal.value.getTax(tax.rate),
+                    factor = tax.factor,
+                    withholding = tax.withholding
+                )
             }
             item {
                 Spacer(modifier = Modifier.padding(top = 4.dp))
                 Divider(modifier = ModifierFill)
                 Spacer(modifier = Modifier.padding(top = 4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = TOTAL, style = MaterialTheme.typography.bodySmall)
-                    }
-                    Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource("drawables/money.svg"),
-                            contentDescription = "money",
-                            modifier = ModifierFieldImages
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = viewModel.total.value.moneyFormat())
-                    }
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = TOTAL_GAIN, style = MaterialTheme.typography.bodySmall, modifier = Alpha)
-                    }
-                    Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource("drawables/money.svg"),
-                            contentDescription = "money",
-                            modifier = ModifierFieldImages
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = viewModel.totalGain.value.moneyFormat(), modifier = Alpha)
-                    }
-                }
+                MoneyText(
+                    indicator = TOTAL,
+                    money = viewModel.total.value,
+                )
+                MoneyText(
+                    indicator = TOTAL_GAIN,
+                    money = viewModel.totalGain.value,
+                    gain = true
+                )
             }
         }
     }

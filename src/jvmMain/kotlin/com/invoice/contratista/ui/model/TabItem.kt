@@ -2,8 +2,8 @@ package com.invoice.contratista.ui.model
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
-import com.invoice.contratista.ui.section.LoginSection
-import com.invoice.contratista.ui.section.SingUpSection
+import com.invoice.contratista.ui.section.auth.LoginSection
+import com.invoice.contratista.ui.section.auth.SingUpSection
 import com.invoice.contratista.utils.ComposableFun
 
 @OptIn(ExperimentalMaterial3Api::class)

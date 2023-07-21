@@ -29,7 +29,10 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
     val scope = rememberCoroutineScope()
     val viewModel = remember { BudgetViewModel() }
     if (eventViewModel.listParts.value.isNotEmpty() && viewModel.part.value == null)
-        viewModel.part.value = eventViewModel.listParts.value[0]
+        scope.launch {
+            viewModel.findByProductId(eventViewModel.listParts.value[0])
+        }
+
     Row {
         Row(modifier = Modifier.weight(0.5f)) {
             ElevatedButton(

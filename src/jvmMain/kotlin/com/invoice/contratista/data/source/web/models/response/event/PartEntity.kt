@@ -4,6 +4,6 @@ data class PartEntity(
     var discount: Double,
     val id: String,
     val number: Int,
-    val quantity: Int,
+    var quantity: Int,
     val reserved: Reserved
 )

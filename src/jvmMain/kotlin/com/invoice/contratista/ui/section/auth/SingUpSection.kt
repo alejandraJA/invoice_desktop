@@ -1,4 +1,4 @@
-package com.invoice.contratista.ui.section
+package com.invoice.contratista.ui.section.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,6 @@ import com.invoice.contratista.ui.custom.component.ErrorDialog
 import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
-import com.invoice.contratista.ui.section.auth.AuthenticationViewModel
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import com.invoice.contratista.utils.Constants
