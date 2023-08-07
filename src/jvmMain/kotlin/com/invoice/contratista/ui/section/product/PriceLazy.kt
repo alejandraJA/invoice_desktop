@@ -33,7 +33,7 @@ fun PriceLazy(priceEntities: List<PriceEntity>) = LazyVerticalGrid(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = price.date.timestamp.substring(0..9),
+                    text = price.date,
                     modifier = Modifier.alpha(0.5f),
                     style = MaterialTheme.typography.bodySmall
                 )

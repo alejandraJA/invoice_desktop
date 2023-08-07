@@ -6,13 +6,17 @@ import com.invoice.contratista.data.source.web.models.response.CostEntity
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.data.source.web.models.response.event.PartEntity
 import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
+import com.invoice.contratista.service.ReservedService
 import com.invoice.contratista.utils.CUOTA
 import com.invoice.contratista.utils.EXENTO
 import com.invoice.contratista.utils.MoneyUtils.getTax
 import com.invoice.contratista.utils.getDate
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class PartViewModel : KoinComponent {
+
+    private val service: ReservedService by inject()
 
     val quantity: MutableState<Int> = mutableStateOf(0)
     val subTotal: MutableState<Double> = mutableStateOf(0.0)
@@ -27,17 +31,31 @@ class PartViewModel : KoinComponent {
     private val _sumTax: MutableState<Double> = mutableStateOf(0.0)
     private val _restTax: MutableState<Double> = mutableStateOf(0.0)
 
+    private val loading: MutableState<Boolean> = mutableStateOf(false)
+    private val error: MutableState<String> = mutableStateOf("")
+
     fun setPart(
         inventory: MutableState<ProductInventoryModel?>,
         part: MutableState<PartEntity?>
     ) {
         this.part.value = part.value
         _cost.value = if (inventory.value != null) {
-            inventory.value!!.costEntities.sortBy { it.date!!.timestamp.getDate() }
+            inventory.value!!.costEntities.sortBy { it.date }
             inventory.value!!.costEntities.last()
         } else null
         calculate(part)
     }
+
+    suspend fun updateProduct(idProduct: String) = service.updateProduct(
+        part.value!!.reserved.id,
+        idProduct,
+        onSuccess = {
+            loading.value = false
+            part.value?.reserved = it
+        },
+        onError = {
+            error.value = ""
+        })
 
     fun calculate(part: MutableState<PartEntity?>) {
         this.part.value = part.value

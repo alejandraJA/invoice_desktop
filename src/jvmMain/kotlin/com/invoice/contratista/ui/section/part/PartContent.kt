@@ -26,6 +26,7 @@ fun PartContent(
     modifier: Modifier
 ) = Column(modifier) {
     Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
+
     // region Price and Gain
     ElevatedCard {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {

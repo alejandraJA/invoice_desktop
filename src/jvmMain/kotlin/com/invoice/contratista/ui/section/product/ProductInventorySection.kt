@@ -36,7 +36,7 @@ fun ProductInventorySection(inventory: MutableState<ProductInventoryModel?>) = C
             )
             TextWithTitle(
                 title = MODIFIED,
-                text = inventory.value!!.modified!!.timestamp.substring(0..9),
+                text = inventory.value!!.modified!!,
                 modifier = Modifier.weight(1f),
             )
         }

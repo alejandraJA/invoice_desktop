@@ -1,9 +1,6 @@
 package com.invoice.contratista.di
 
-import com.invoice.contratista.data.repository.web.CustomerRepositoryImp
-import com.invoice.contratista.data.repository.web.EventRepositoryImp
-import com.invoice.contratista.data.repository.web.ProductRepositoryImp
-import com.invoice.contratista.data.repository.web.SingRepositoryImp
+import com.invoice.contratista.data.repository.web.*
 import com.invoice.contratista.data.source.web.retrofit.Service
 import com.invoice.contratista.domain.CustomerRepository
 import com.invoice.contratista.domain.EventRepository
@@ -11,6 +8,7 @@ import com.invoice.contratista.domain.ProductRepository
 import com.invoice.contratista.domain.SingRepository
 import com.invoice.contratista.service.EventService
 import com.invoice.contratista.service.ProductService
+import com.invoice.contratista.service.ReservedService
 import com.invoice.contratista.service.SingService
 import com.invoice.contratista.utils.Constants
 import okhttp3.OkHttpClient
@@ -38,14 +36,14 @@ fun webModule() = module {
         retrofit.create(Service::class.java)
     }
 
-
-
     factory<CustomerRepository> { CustomerRepositoryImp(get()) }
     factory<EventRepository> { EventRepositoryImp(get()) }
     factory<SingRepository> { SingRepositoryImp(get()) }
     factory<ProductRepository> { ProductRepositoryImp(get()) }
+    factory<ReservedRepositoryImp> { ReservedRepositoryImp(get()) }
 
     factory<ProductService> { ProductService(get(), get()) }
     factory<EventService> { EventService(get(), get()) }
     factory<SingService> { SingService(get(), get()) }
+    factory<ReservedService> { ReservedService(get(), get()) }
 }

@@ -5,5 +5,5 @@ data class PartEntity(
     val id: String,
     val number: Int,
     var quantity: Int,
-    val reserved: Reserved
+    var reserved: Reserved
 )

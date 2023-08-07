@@ -8,6 +8,7 @@ import com.invoice.contratista.data.source.web.models.response.TokenModel
 import com.invoice.contratista.data.source.web.models.response.UserModel
 import com.invoice.contratista.data.source.web.models.response.customer.CustomerResponse
 import com.invoice.contratista.data.source.web.models.response.event.EventModel
+import com.invoice.contratista.data.source.web.models.response.event.Reserved
 import com.invoice.contratista.utils.Constants
 import retrofit2.Response
 import retrofit2.http.*
@@ -36,5 +37,12 @@ interface Service {
         @Header(Constants.AUTHORIZATION) token: String,
         @Path("id") idProduct: String
     ): Response<ResponseApi<ProductInventoryModel>>
+
+    @PUT("reserved/{id}")
+    fun updateProduct(
+        @Header(Constants.AUTHORIZATION) token: String,
+        @Path("id") idReserved: String,
+        @Query("idProduct") idProduct: String,
+    ): Response<ResponseApi<Reserved>>
 
 }

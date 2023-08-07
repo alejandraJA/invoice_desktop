@@ -1,8 +1,6 @@
 package com.invoice.contratista.ui.section.budget
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -82,6 +80,7 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
             }
             // endregion
         }
+        Divider(modifier = Modifier.width(1.dp).fillMaxHeight().padding(8.dp))
         viewModel.part.value?.let {
             PartSection(
                 part = viewModel.part,

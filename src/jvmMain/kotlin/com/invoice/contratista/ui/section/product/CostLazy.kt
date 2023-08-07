@@ -30,7 +30,7 @@ fun CostLazy(costEntities: List<CostEntity>) = LazyVerticalGrid(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = costEntity.date!!.timestamp.substring(0..9),
+                    text = costEntity.date,
                     modifier = Modifier.alpha(0.5f),
                     style = MaterialTheme.typography.bodySmall
                 )
