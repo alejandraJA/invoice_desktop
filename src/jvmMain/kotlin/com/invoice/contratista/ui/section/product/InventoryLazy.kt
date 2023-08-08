@@ -31,5 +31,6 @@ fun InventoryItem(inventory: ProductInventoryModel) = ElevatedCard {
         viewModel.getAvailability(inventory.id)
     }
 
+
 }
 

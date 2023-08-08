@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.invoice.contratista.data.source.web.models.response.event.CustomerEntity
-import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import com.invoice.contratista.utils.*
 

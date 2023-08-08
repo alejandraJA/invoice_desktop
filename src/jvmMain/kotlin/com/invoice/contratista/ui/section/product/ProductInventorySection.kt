@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.utils.AVAILABLE
 import com.invoice.contratista.utils.COST_LIST
 import com.invoice.contratista.utils.INVENTORY

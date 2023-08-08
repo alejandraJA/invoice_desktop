@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
-import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.theme.ModifierCard
 import com.invoice.contratista.utils.BUDGET

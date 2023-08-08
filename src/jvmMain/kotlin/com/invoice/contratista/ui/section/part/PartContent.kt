@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.invoice.contratista.ui.custom.component.MoneyText
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
-import com.invoice.contratista.ui.custom.component.items.TextWithTitle
+import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.theme.*
 import com.invoice.contratista.utils.*
 import com.invoice.contratista.utils.MoneyUtils.getRate
