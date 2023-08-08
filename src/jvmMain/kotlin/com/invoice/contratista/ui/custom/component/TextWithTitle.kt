@@ -1,4 +1,4 @@
-package com.invoice.contratista.ui.custom.component.items
+package com.invoice.contratista.ui.custom.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
