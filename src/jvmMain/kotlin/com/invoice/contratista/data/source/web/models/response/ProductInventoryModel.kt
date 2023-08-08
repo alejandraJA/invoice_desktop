@@ -9,5 +9,4 @@ ProductInventoryModel(
     val quantity: Int,
     var modified: String?,
     var product: Product,
-    var costEntities: MutableList<CostEntity>
 )

@@ -1,7 +1,6 @@
 package com.invoice.contratista.service
 
 import com.invoice.contratista.data.repository.web.utils.WebStatus
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.data.source.web.models.response.event.Reserved
 import com.invoice.contratista.domain.ReservedRepository
 import kotlinx.coroutines.Dispatchers

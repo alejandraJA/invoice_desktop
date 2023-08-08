@@ -1,6 +1,7 @@
 package com.invoice.contratista.service
 
 import com.invoice.contratista.data.repository.web.utils.WebStatus
+import com.invoice.contratista.data.source.web.models.response.Availability
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.domain.ProductRepository
 import kotlinx.coroutines.Dispatchers
@@ -25,11 +26,30 @@ class ProductService(
         }
     }
 
-    private fun getWebStatus(
-        onSuccess: (ProductInventoryModel) -> Unit,
+    suspend fun getAll(
+        onSuccess: (List<ProductInventoryModel>) -> Unit,
         onError: (String) -> Unit
-    ) = object : WebStatus<ProductInventoryModel> {
-        override fun success(data: ProductInventoryModel) {
+    ) = withContext(Dispatchers.IO) {
+        if (isUserLogged && token!!.isNotEmpty()) {
+            repository.getAll(token!!, getWebStatus(onSuccess, onError))
+        }
+    }
+
+    suspend fun getAvailability(
+        idProduct: String,
+        onSuccess: (Availability) -> Unit,
+        onError: (String) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        if (isUserLogged && token!!.isNotEmpty()) {
+            repository.getAvailability(token!!, idProduct, getWebStatus(onSuccess, onError))
+        }
+    }
+
+    private fun <T> getWebStatus(
+        onSuccess: (T) -> Unit,
+        onError: (String) -> Unit
+    ) = object : WebStatus<T> {
+        override fun success(data: T) {
             onSuccess.invoke(data)
         }
 
@@ -37,4 +57,5 @@ class ProductService(
             onError.invoke(e)
         }
     }
+
 }

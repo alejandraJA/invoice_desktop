@@ -10,7 +10,6 @@ import com.invoice.contratista.service.ReservedService
 import com.invoice.contratista.utils.CUOTA
 import com.invoice.contratista.utils.EXENTO
 import com.invoice.contratista.utils.MoneyUtils.getTax
-import com.invoice.contratista.utils.getDate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -40,8 +39,8 @@ class PartViewModel : KoinComponent {
     ) {
         this.part.value = part.value
         _cost.value = if (inventory.value != null) {
-            inventory.value!!.costEntities.sortBy { it.date }
-            inventory.value!!.costEntities.last()
+            inventory.value!!.product.productBase.costEntities.sortBy { it.date }
+            inventory.value!!.product.productBase.costEntities.last()
         } else null
         calculate(part)
     }
@@ -73,7 +72,7 @@ class PartViewModel : KoinComponent {
             else 0.0
 
         _subTax.value =
-            if (this.part.value != null) this.part.value!!.reserved.product.taxEntities.filter { it.factor != EXENTO }
+            if (this.part.value != null) this.part.value!!.reserved.inventory.product.taxEntities.filter { it.factor != EXENTO }
             else emptyList()
 
         _sumTax.value = _subTax.value.sumOf {

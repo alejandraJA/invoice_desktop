@@ -41,7 +41,7 @@ fun ProductInventorySection(inventory: MutableState<ProductInventoryModel?>) = C
             )
         }
         Text(text = COST_LIST, modifier = alpha.padding(top = 4.dp), style = typography)
-        CostLazy(inventory.value!!.costEntities)
+        CostLazy(inventory.value!!.product.productBase.costEntities)
     }
 
 }

@@ -27,6 +27,6 @@ fun PartSection(
     viewModel.setPart(inventory, part)
     PartContent(viewModel = viewModel, modifier = Modifier.weight(1f))
     ElevatedCard(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
-        ProductSection(part.value!!.reserved.product, inventory)
+        ProductSection(part.value!!.reserved.inventory.product, inventory)
     }
 }

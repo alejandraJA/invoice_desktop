@@ -50,7 +50,7 @@ fun ProductSection(product: Product, inventory: MutableState<ProductInventoryMod
     Text(text = TAX, modifier = alpha, style = typography)
     TaxLazy(product.taxEntities)
     Text(text = PRICES, modifier = alpha, style = typography)
-    PriceLazy(product.priceEntities)
+    PriceLazy(product.productBase.priceEntities)
 
     ProductInventorySection(inventory)
 }

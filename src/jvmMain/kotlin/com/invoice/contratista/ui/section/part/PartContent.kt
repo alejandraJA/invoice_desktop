@@ -27,6 +27,25 @@ fun PartContent(
 ) = Column(modifier) {
     Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
 
+    // region Product Select
+    ElevatedCard(onClick = {
+
+    }) {
+        Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
+            TextWithTitle(
+                title = PRODUCT_SERVICE,
+                text = viewModel.part.value!!.reserved.inventory.product.name,
+                modifier = Modifier.padding(end = 4.dp).weight(1f),
+            )
+            Spacer(modifier = Modifier.width(8.dp).height(1.dp))
+            TextWithTitle(
+                title = UNIT_NAME,
+                text = viewModel.part.value!!.reserved.inventory.product.productBase.unitName,
+                modifier = Modifier.padding(start = 4.dp).weight(1f),
+            )
+        }
+    }
+    // endregion
     // region Price and Gain
     ElevatedCard {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
@@ -116,8 +135,8 @@ fun PartContent(
                     money = viewModel.subTotal.value,
                 )
             }
-            items(count = viewModel.part.value!!.reserved.product.taxEntities.size) { position ->
-                val tax = viewModel.part.value!!.reserved.product.taxEntities[position]
+            items(count = viewModel.part.value!!.reserved.inventory.product.taxEntities.size) { position ->
+                val tax = viewModel.part.value!!.reserved.inventory.product.taxEntities[position]
                 MoneyText(
                     indicator = "${tax.type} (${tax.rate.getRate()} %)",
                     money = if (tax.factor == CUOTA) tax.rate * viewModel.quantity.value

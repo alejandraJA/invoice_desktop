@@ -44,7 +44,7 @@ fun PartLazy(
                     style = typography
                 )
                 Text(
-                    text = part.reserved.product.productBase.description,
+                    text = part.reserved.inventory.product.productBase.description,
                     modifier = Modifier.weight(2f),
                     style = typography
                 )
@@ -54,7 +54,7 @@ fun PartLazy(
                     style = typography
                 )
                 Text(
-                    text = part.reserved.product.productBase.unitName,
+                    text = part.reserved.inventory.product.productBase.unitName,
                     modifier = modifier,
                     style = typography
                 )

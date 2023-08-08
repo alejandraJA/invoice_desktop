@@ -16,9 +16,9 @@ class BudgetViewModel : KoinComponent {
     val part = mutableStateOf<PartEntity?>(null)
     suspend fun findByProductId(partEntity: PartEntity) {
         part.value = partEntity
-        service.findByProductId(partEntity.reserved.product.id, { inventoryModel ->
+        service.findByProductId(partEntity.reserved.inventory.product.id, { inventoryModel ->
             loadingDialogState.value = false
-            if (inventoryModel.costEntities.isNotEmpty())
+            if (inventoryModel.product.productBase.costEntities.isNotEmpty())
                 inventory.value = inventoryModel
         }, { errorState.value })
     }

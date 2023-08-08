@@ -1,10 +1,9 @@
 package com.invoice.contratista.data.source.web.models.response
 
-
-data class CostEntity(
+data class Available(
     val id: String,
-    val unitCost: Double,
+    val modified: String,
+    val productId: String,
     val quantity: Int,
-    var date: String,
-    var vendor: VendorEntity?
+    val userId: String
 )

@@ -59,6 +59,7 @@ const val GAIN_FOR_UNIT = "Gain for Unit"
 const val AVAILABLE = "Available"
 const val INVENTORY = "Inventory"
 const val MODIFIED = "Modified"
+const val SELECT_PRODUCT = "Select Product"
 fun getTaxability(value: String) = when(value) {
     "01" -> "No objeto de impuesto."
     "02" -> "Sí objeto de impuesto."
