@@ -2,7 +2,6 @@ package com.invoice.contratista.ui.section.part
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.invoice.contratista.data.source.web.models.response.CostEntity
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.data.source.web.models.response.event.PartEntity
 import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
@@ -16,7 +15,7 @@ import org.koin.core.component.inject
 class PartViewModel : KoinComponent {
 
     private val service: ReservedService by inject()
-
+    val inventory: MutableState<ProductInventoryModel?> = mutableStateOf(null)
     val quantity: MutableState<Int> = mutableStateOf(0)
     val subTotal: MutableState<Double> = mutableStateOf(0.0)
     val total: MutableState<Double> = mutableStateOf(0.0)
@@ -25,7 +24,7 @@ class PartViewModel : KoinComponent {
     val gainForUnit: MutableState<Double> = mutableStateOf(0.0)
     val amount: MutableState<Double> = mutableStateOf(0.0)
     private val _discount: MutableState<Double> = mutableStateOf(0.0)
-    private var _cost: MutableState<CostEntity?> = mutableStateOf(null)
+    var cost: MutableState<Double> = mutableStateOf(0.0)
     private val _subTax: MutableState<List<TaxEntity>> = mutableStateOf(listOf())
     private val _sumTax: MutableState<Double> = mutableStateOf(0.0)
     private val _restTax: MutableState<Double> = mutableStateOf(0.0)
@@ -34,14 +33,10 @@ class PartViewModel : KoinComponent {
     private val error: MutableState<String> = mutableStateOf("")
 
     fun setPart(
-        inventory: MutableState<ProductInventoryModel?>,
         part: MutableState<PartEntity?>
     ) {
         this.part.value = part.value
-        _cost.value = if (inventory.value != null) {
-            inventory.value!!.product.productBase.costEntities.sortBy { it.date }
-            inventory.value!!.product.productBase.costEntities.last()
-        } else null
+        if (part.value != null) cost.value = part.value!!.reserved.inventory.product.costEntity.unitCost
         calculate(part)
     }
 
@@ -86,10 +81,8 @@ class PartViewModel : KoinComponent {
             else 0.0
         }
         total.value = (subTotal.value + _sumTax.value - _restTax.value)
-        if (_cost.value != null) {
-            gainForUnit.value = this.part.value!!.reserved.price.unitPrice - _cost.value!!.unitCost
-            totalGain.value = gainForUnit.value * quantity.value
-        }
+        gainForUnit.value = this.part.value!!.reserved.price.unitPrice - cost.value
+        totalGain.value = gainForUnit.value * quantity.value
         amount.value = this.part.value!!.reserved.price.unitPrice * quantity.value
     }
 

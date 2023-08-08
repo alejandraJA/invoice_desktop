@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.data.source.web.models.response.event.Product
 import com.invoice.contratista.ui.custom.component.items.TextWithTitle
 import com.invoice.contratista.ui.theme.Alpha
 import com.invoice.contratista.ui.theme.ModifierCard
@@ -19,8 +17,9 @@ import com.invoice.contratista.utils.*
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun ProductSection(product: Product, inventory: MutableState<ProductInventoryModel?>) = Column(modifier = ModifierCard) {
+fun ProductSection(inventory: ProductInventoryModel) = Column(modifier = ModifierCard) {
     val alpha = Alpha.padding(top = 4.dp)
+    val product = inventory.product
     val typography = MaterialTheme.typography.bodySmall
     Row {
         Column(modifier = Modifier.weight(1f)) {

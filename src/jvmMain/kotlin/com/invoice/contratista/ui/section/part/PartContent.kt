@@ -47,17 +47,26 @@ fun PartContent(
     }
     // endregion
     // region Price and Gain
-    ElevatedCard {
+    ElevatedCard(modifier = Modifier.padding(top = 8.dp)) {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
             TextWithTitle(
-                title = PRICE,
-                text = "$ ${viewModel.part.value!!.reserved.price.unitPrice.moneyFormat()}",
+                title = COST,
+                format = Constants.Format.Money,
+                doubleMutableState = mutableStateOf(viewModel.cost.value),
                 modifier = Modifier.padding(end = 4.dp).weight(1f),
             )
             Spacer(modifier = Modifier.width(8.dp).height(1.dp))
             TextWithTitle(
+                title = PRICE,
+                format = Constants.Format.Money,
+                doubleMutableState = mutableStateOf(viewModel.part.value!!.reserved.price.unitPrice),
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp).weight(1f),
+            )
+            Spacer(modifier = Modifier.width(8.dp).height(1.dp))
+            TextWithTitle(
                 title = GAIN_FOR_UNIT,
-                text = "$ ${viewModel.gainForUnit.value.moneyFormat()}",
+                format = Constants.Format.Money,
+                doubleMutableState = mutableStateOf(viewModel.gainForUnit.value),
                 modifier = Modifier.padding(start = 4.dp).weight(1f),
             )
         }

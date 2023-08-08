@@ -5,12 +5,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.ui.custom.component.ErrorDialog
-import com.invoice.contratista.ui.custom.component.LoadingDialog
 import com.invoice.contratista.ui.section.CustomerDataSection
 import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.section.part.PartLazy
@@ -18,19 +15,15 @@ import com.invoice.contratista.ui.section.part.PartSection
 import com.invoice.contratista.ui.theme.ModifierFieldImages
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.utils.*
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun BudgetSection(eventViewModel: EventViewModel) = Column {
-    val scope = rememberCoroutineScope()
     val viewModel = remember { BudgetViewModel() }
     if (eventViewModel.listParts.value.isNotEmpty() && viewModel.part.value == null)
-        scope.launch {
-            viewModel.findByProductId(eventViewModel.listParts.value[0])
-        }
-
+            viewModel.setPart(eventViewModel.listParts.value[0])
+    // region Head
     Row {
         Row(modifier = Modifier.weight(0.5f)) {
             ElevatedButton(
@@ -61,9 +54,10 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
             )
         }
     }
+    // endregion
     Row {
+        // region Body Budget
         Column(modifier = Modifier.weight(0.5f)) {
-            // region Body Budget
             BudgetData(eventViewModel = eventViewModel, stateOnClick = false)
             ElevatedCard(modifier = Modifier.padding(top = 4.dp)) {
                 eventViewModel.customer.value?.let {
@@ -74,24 +68,17 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
                 Text(text = ADD_PART)
             }
             PartLazy(eventViewModel.listParts.value) { partEntity ->
-                scope.launch {
-                    viewModel.findByProductId(partEntity)
-                }
+                viewModel.setPart(partEntity)
             }
-            // endregion
         }
+        // endregion
         Divider(modifier = Modifier.width(1.dp).fillMaxHeight().padding(8.dp))
         viewModel.part.value?.let {
             PartSection(
                 part = viewModel.part,
-                inventory = viewModel.inventory,
                 modifier = Modifier.weight(1f),
             )
         }
-    }
-    LoadingDialog(show = viewModel.loadingDialogState) { viewModel.loadingDialogState.value = false }
-    ErrorDialog(viewModel.errorState) {
-        viewModel.errorState.value = ""
     }
 }
 
