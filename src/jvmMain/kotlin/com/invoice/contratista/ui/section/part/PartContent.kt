@@ -125,7 +125,7 @@ fun PartContent(
             val model = TextFieldModel(
                 hint = DISCOUNT,
                 change = viewModel.onChangeDiscount(),
-                initField = mutableStateOf(viewModel.part.value!!.discount.toInt().toString()),
+                init = viewModel.part.value!!.discount.toInt().toString(),
                 icon = "money"
             )
             Column(modifier = Modifier.weight(1f)) { TextField(model = model) }

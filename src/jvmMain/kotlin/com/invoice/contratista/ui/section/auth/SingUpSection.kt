@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -51,7 +50,7 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
                     hint = "Email",
                     change = viewModel.onEmailChange,
                     placeholder = "Type your email",
-                    initField = mutableStateOf("email2@email.com"),
+                    init = "email2@email.com",
                     icon = "mail",
                     isRequired = true,
                     externalError = viewModel.errorEmail,
@@ -64,7 +63,7 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
                     hint = "Password",
                     change = viewModel.onPasswordChange,
                     placeholder = "Type your Password",
-                    initField = mutableStateOf("ale.-112233"),
+                    init = "ale.-112233",
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),
@@ -78,7 +77,7 @@ fun SingUpSection(onLoggedUser: () -> Unit) {
                     hint = "Password",
                     change = viewModel.onPasswordConfirmChange,
                     placeholder = "Confirm Password",
-                    initField = mutableStateOf("ale.-112233"),
+                    init = "ale.-112233",
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),

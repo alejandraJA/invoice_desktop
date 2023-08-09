@@ -1,12 +1,14 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.invoice.contratista.ui.custom.component
 
-
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
@@ -21,77 +23,69 @@ import com.invoice.contratista.utils.REQUIRED
 @Composable
 fun TextField(
     model: TextFieldModel
-) {
-
-    val isFieldEmpty = model.field.text.isEmpty()
+) = Column(modifier = model.modifier) {
+    var field by rememberSaveable { mutableStateOf(TextFieldValue(model.init)) }
+    val isFieldEmpty = field.text.isEmpty()
     val hasError = model.externalError.value.isNotEmpty()
     val isRequiredAndEmpty = model.isRequired && isFieldEmpty
     val isError = isRequiredAndEmpty || hasError
 
-    Column(modifier = model.modifier) {
-        if (model.initField.value.isNotEmpty()) {
-            model.change.invoke(model.initField.value)
-        }
+    OutlinedTextField(
+        value = field,
+        onValueChange = { newValue ->
+            field = newValue
+            model.change.invoke(newValue.text)
+        },
+        label = {
+            val labelHint = "${model.hint}${if (model.isRequired) "*" else ""}"
+            Text(text = labelHint)
+        },
+        placeholder = model.placeholder.takeIf { it.isNotEmpty() }?.let {
+            { Text(text = it) }
+        },
+        isError = isError,
+        leadingIcon = model.icon.takeIf { it.isNotEmpty() }?.let { icon ->
+            {
+                Icon(
+                    painter = painterResource(resourcePath = "drawables/$icon.svg"),
+                    contentDescription = "${model.hint} Icon",
+                    tint =
+                    if (isError) MaterialTheme.colorScheme.error
+                    else LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+                    modifier = ModifierFieldImages
+                )
+            }
+        },
+        trailingIcon = if (model.trailingIcon.isNotEmpty() && !(model.isRequired && isFieldEmpty)) {
+            {
+                Icon(
+                    painter = painterResource(resourcePath = "drawables/high.svg"),
+                    contentDescription = "Error $model.hint",
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = ModifierFieldImages
+                )
+            }
+        } else if (model.isRequired && isFieldEmpty) {
+            {
+                Icon(
+                    painter = painterResource(resourcePath = "drawables/high.svg"),
+                    contentDescription = "Error $model.hint",
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = ModifierFieldImages
+                )
+            }
+        } else null,
+        visualTransformation = model.visualTransformation,
+        modifier = model.modifier
+    )
 
-        OutlinedTextField(
-            value = model.field,
-            onValueChange = { newValue ->
-                if (newValue.text != model.field.text) {
-                    model.initField.value = newValue.text
-                    model.field = newValue
-                    model.change.invoke(newValue.text)
-                }
-            },
-            label = {
-                val labelHint = "${model.hint}${if (model.isRequired) "*" else ""}"
-                Text(text = labelHint)
-            },
-            placeholder = model.placeholder.takeIf { it.isNotEmpty() }?.let {
-                { Text(text = it) }
-            },
-            isError = isError,
-            leadingIcon = model.icon.takeIf { it.isNotEmpty() }?.let { icon ->
-                {
-                    Icon(
-                        painter = painterResource(resourcePath = "drawables/$icon.svg"),
-                        contentDescription = "${model.hint} Icon",
-                        tint =
-                        if (isError) MaterialTheme.colorScheme.error
-                        else LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
-                        modifier = ModifierFieldImages
-                    )
-                }
-            },
-            trailingIcon = if (model.trailingIcon.isNotEmpty() && !(model.isRequired && isFieldEmpty)) {
-                {
-                    Icon(
-                        painter = painterResource(resourcePath = "drawables/high.svg"),
-                        contentDescription = "Error $model.hint",
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = ModifierFieldImages
-                    )
-                }
-            } else if (model.isRequired && isFieldEmpty) {
-                {
-                    Icon(
-                        painter = painterResource(resourcePath = "drawables/high.svg"),
-                        contentDescription = "Error $model.hint",
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = ModifierFieldImages
-                    )
-                }
-            } else null,
-            visualTransformation = model.visualTransformation,
-            modifier = model.modifier
-        )
+    TextFieldErrorText(textFieldModel = model, isRequiredAndEmpty = isRequiredAndEmpty)
 
-        TextFieldErrorText(textFieldModel = model, isRequiredAndEmpty = isRequiredAndEmpty)
-
-        if (model.counterEnable) {
-            TextFieldCounterText(field = model.field, counterNumber = model.counterNumber)
-        }
+    if (model.counterEnable) {
+        TextFieldCounterText(field = field, counterNumber = model.counterNumber)
     }
 }
+
 
 @Composable
 private fun TextFieldErrorText(
@@ -119,12 +113,11 @@ private fun TextFieldCounterText(
     )
 }
 
-
 class TextFieldModel(
+    val init: String = "",
     val hint: String,
     val change: (String) -> Unit,
     val placeholder: String = "",
-    var initField: MutableState<String> = mutableStateOf(""),
     val modifier: Modifier = Modifier.fillMaxWidth(),
     val icon: String = HIGH,
     val isRequired: Boolean = false,
@@ -133,10 +126,4 @@ class TextFieldModel(
     val externalError: MutableState<String> = mutableStateOf(""),
     val counterNumber: Int = 0,
     val trailingIcon: String = ""
-) {
-    var field: TextFieldValue
-
-    init {
-        field = TextFieldValue(text = initField.value)
-    }
-}
+)

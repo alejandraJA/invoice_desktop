@@ -86,7 +86,7 @@ class PartViewModel : KoinComponent {
         }
         total.value = (subTotal.value + _sumTax.value - _restTax.value)
         gainForUnit.value = this.part.value!!.reserved.price.unitPrice - cost.value
-        totalGain.value = gainForUnit.value * quantity.value
+        totalGain.value = (gainForUnit.value * quantity.value) - _discount.value
         amount.value = this.part.value!!.reserved.price.unitPrice * quantity.value
     }
 
@@ -107,8 +107,8 @@ class PartViewModel : KoinComponent {
             ((part.value!!.reserved.price.unitPrice * quantity.value) - it.ifEmpty { "0" }.toDouble())
     }
 
-    fun set_onUpdateReserved(_onUpdateReserved: () -> Unit) {
-        this._onUpdateReserved = _onUpdateReserved
+    fun setOnUpdateReserved(onUpdateReserved: () -> Unit) {
+        this._onUpdateReserved = onUpdateReserved
     }
 
 }
