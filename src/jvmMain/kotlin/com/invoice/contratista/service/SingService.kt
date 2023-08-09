@@ -1,6 +1,5 @@
 package com.invoice.contratista.service
 
-import com.invoice.contratista.data.repository.web.utils.WebStatus
 import com.invoice.contratista.data.source.local.UserLogged
 import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
@@ -14,77 +13,52 @@ import kotlin.coroutines.CoroutineContext
 class SingService(
     private val repository: SingRepository,
     private val userService: UserService
-) {
-    val isLoggedUser: Boolean get() = userService.isLoggedUser()
+) : SuperService(userService) {
 
-    suspend fun updateToken(success: () -> Unit) = withContext(Dispatchers.IO) {
+    suspend fun updateToken(success: (TokenModel) -> Unit, onError: (String) -> Unit) = withContext(Dispatchers.IO) {
         repository.updateToken(
             userService.getUpdateTokenRequest(),
-            updateToken(success, {})
+            getWebStatus(success, onError)
         )
     }
 
     suspend fun login(
         email: String,
         password: String,
-        onSuccess: () -> Unit,
+        onSuccess: (TokenModel) -> Unit,
         onError: (String) -> Unit,
         context: CoroutineContext = Dispatchers.IO,
     ) = withContext(context = context) {
-        if (isLoggedUser) {
+        if (isUserLogged) {
             if (userService.login(email, password)) {
                 onError.invoke("Email or password incorrect!")
                 return@withContext
             }
             val request = UpdateTokenRequest(email, userService.getToken()!!)
-            repository.updateToken(request, updateToken(onSuccess, onError))
+            repository.updateToken(request, getWebStatus(onSuccess) { error ->
+                logout()
+                onError.invoke(error)
+            })
             return@withContext
         }
-        repository.singIn(SingRequest(email, password), singIn(email, password, onSuccess, onError))
+        repository.singIn(SingRequest(email, password), getWebStatus({ tokenModel ->
+            userService.singIn(UserLogged(email, tokenModel!!.token, password))
+            onSuccess.invoke(tokenModel)
+        }, { error ->
+            logout()
+            onError.invoke(error)
+        }))
     }
 
     suspend fun singUp(
         request: SingRequest,
-        onSuccess: () -> Unit,
+        onSuccess: (UserModel) -> Unit,
         onError: (String) -> Unit,
         context: CoroutineContext = Dispatchers.IO,
     ) = withContext(context = context) {
-        repository.singUp(request, singUpWebStatus(onSuccess, onError))
+        repository.singUp(request, getWebStatus(onSuccess, onError))
     }
 
     fun logout() = userService.logout()
-    private fun singIn(
-        email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) = object : WebStatus<TokenModel?> {
-        override fun success(data: TokenModel?) {
-            userService.singIn(UserLogged(email, data!!.token, password))
-            onSuccess.invoke()
-        }
-
-        override fun error(e: String) = onError.invoke(e)
-
-    }
-
-    private fun updateToken(onSuccess: () -> Unit, onError: (String) -> Unit) = object : WebStatus<TokenModel> {
-        override fun success(data: TokenModel) {
-            userService.setToken(data.token)
-            onSuccess.invoke()
-        }
-
-        override fun error(e: String) = onError.invoke(e)
-
-    }
-
-    private fun singUpWebStatus(onSuccess: () -> Unit, onError: (String) -> Unit) =
-        object : WebStatus<UserModel> {
-            override fun success(data: UserModel) {
-                onSuccess.invoke()
-            }
-
-            override fun error(e: String) = onError.invoke(e)
-        }
 
 }

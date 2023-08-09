@@ -7,5 +7,5 @@ data class Reserved(
     val dateExpiry: String,
     val price: Price,
 //    val product: Product
-    val inventory: ProductInventoryModel
+    var inventory: ProductInventoryModel
 )

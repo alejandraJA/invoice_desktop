@@ -23,14 +23,17 @@ class PartViewModel : KoinComponent {
     val part: MutableState<PartEntity?> = mutableStateOf(null)
     val gainForUnit: MutableState<Double> = mutableStateOf(0.0)
     val amount: MutableState<Double> = mutableStateOf(0.0)
-    private val _discount: MutableState<Double> = mutableStateOf(0.0)
     var cost: MutableState<Double> = mutableStateOf(0.0)
+    private val _discount: MutableState<Double> = mutableStateOf(0.0)
     private val _subTax: MutableState<List<TaxEntity>> = mutableStateOf(listOf())
     private val _sumTax: MutableState<Double> = mutableStateOf(0.0)
     private val _restTax: MutableState<Double> = mutableStateOf(0.0)
-
     private val loading: MutableState<Boolean> = mutableStateOf(false)
+    private var _onUpdateReserved: (() -> Unit)? = null
     private val error: MutableState<String> = mutableStateOf("")
+
+
+    val selectProduct: MutableState<Boolean> = mutableStateOf(false)
 
     fun setPart(
         part: MutableState<PartEntity?>
@@ -46,6 +49,7 @@ class PartViewModel : KoinComponent {
         onSuccess = {
             loading.value = false
             part.value?.reserved = it
+            _onUpdateReserved?.invoke()
         },
         onError = {
             error.value = ""
@@ -101,6 +105,10 @@ class PartViewModel : KoinComponent {
         part.value!!.discount = _discount.value
         subTotal.value =
             ((part.value!!.reserved.price.unitPrice * quantity.value) - it.ifEmpty { "0" }.toDouble())
+    }
+
+    fun set_onUpdateReserved(_onUpdateReserved: () -> Unit) {
+        this._onUpdateReserved = _onUpdateReserved
     }
 
 }

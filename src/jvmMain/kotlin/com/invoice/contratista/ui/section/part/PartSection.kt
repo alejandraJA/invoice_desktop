@@ -20,9 +20,11 @@ import com.invoice.contratista.ui.section.product.ProductSection
 fun PartSection(
     part: MutableState<PartEntity?>,
     modifier: Modifier,
+    onUpdateReserved: ()-> Unit
 ) = Row(modifier = modifier.padding(start = 8.dp)) {
     val viewModel = remember { PartViewModel() }
     viewModel.setPart(part)
+    viewModel.set_onUpdateReserved(onUpdateReserved)
     PartContent(viewModel = viewModel, modifier = Modifier.weight(1f))
     ElevatedCard(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
         if (part.value != null) ProductSection(part.value!!.reserved.inventory)

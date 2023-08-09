@@ -2,9 +2,11 @@ package com.invoice.contratista.ui.section.part
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -13,23 +15,26 @@ import com.invoice.contratista.ui.custom.component.MoneyText
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.custom.component.TextWithTitle
+import com.invoice.contratista.ui.section.product.InventoryLazy
 import com.invoice.contratista.ui.theme.*
 import com.invoice.contratista.utils.*
 import com.invoice.contratista.utils.MoneyUtils.getRate
 import com.invoice.contratista.utils.MoneyUtils.getTax
 import com.invoice.contratista.utils.MoneyUtils.moneyFormat
+import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartContent(
     viewModel: PartViewModel,
     modifier: Modifier
 ) = Column(modifier) {
+    val scope = rememberCoroutineScope()
     Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
-
     // region Product Select
     ElevatedCard(onClick = {
-
+        viewModel.selectProduct.value = true
     }) {
         Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
             TextWithTitle(
@@ -170,5 +175,13 @@ fun PartContent(
             }
         }
     }
+    if (viewModel.selectProduct.value)
+        InventoryLazy { inventoryModel ->
+            viewModel.selectProduct.value = false
+            viewModel.part.value!!.reserved.inventory = inventoryModel
+            scope.launch {
+                viewModel.updateProduct(inventoryModel.product.id)
+            }
+        }
     // endregion
 }

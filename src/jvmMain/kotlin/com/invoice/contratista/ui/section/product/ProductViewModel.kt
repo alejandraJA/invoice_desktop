@@ -22,18 +22,22 @@ class ProductViewModel : KoinComponent {
         loading.value = false
     }
 
-    suspend fun getAvailability(idProduct: String) = service.getAvailability(
-        idProduct = idProduct,
-        onSuccess = { availability ->
-            this.availability.value = availability
-            loading.value = false
-        },
-        onError = onError
-    )
+    suspend fun getAvailability(idProduct: String) {
+        if (availability.value == null) service.getAvailability(
+            idProduct = idProduct,
+            onSuccess = { availability ->
+                this.availability.value = availability
+                loading.value = false
+            },
+            onError = onError
+        )
+    }
 
-    suspend fun getAll() = service.getAll(onSuccess = {
-        inventory.value = it
-        loading.value = false
-    }, onError = onError)
+    suspend fun getAll() {
+        if (inventory.value.isEmpty()) service.getAll(onSuccess = {
+            inventory.value = it
+            loading.value = false
+        }, onError = onError)
+    }
 
 }

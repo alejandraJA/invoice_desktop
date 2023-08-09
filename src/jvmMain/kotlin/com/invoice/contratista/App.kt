@@ -33,7 +33,9 @@ fun InvoiceApp() {
 
     scope.launch {
         if (appViewModel.isLoggedUser.value) {
-            appViewModel.updateToken()
+            appViewModel.updateToken {
+                appViewModel.isLoggedUser.value = false
+            }
         }
     }
 

@@ -50,7 +50,7 @@ fun LoginSection(onLoggedUser: () -> Unit) {
                     hint = "Email",
                     change = viewModel.onEmailChange,
                     placeholder = "Type your email",
-                    initField = mutableStateOf("ale@email.com"),
+                    initField = mutableStateOf("Ale@email.com"),
                     icon = "mail",
                     isRequired = true,
                     externalError = viewModel.errorEmail
@@ -61,7 +61,7 @@ fun LoginSection(onLoggedUser: () -> Unit) {
                     hint = "Password",
                     change = viewModel.onPasswordChange,
                     placeholder = "Type your Password",
-                    initField = mutableStateOf("ale@email.com"),
+                    initField = mutableStateOf("ale.-112233"),
                     icon = "password",
                     isRequired = true,
                     visualTransformation = PasswordVisualTransformation(),

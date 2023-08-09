@@ -4,6 +4,7 @@ import com.invoice.contratista.data.source.web.models.request.SingRequest
 import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
 import com.invoice.contratista.data.source.web.models.response.*
 import com.invoice.contratista.data.source.web.models.response.customer.CustomerResponse
+import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
 import com.invoice.contratista.data.source.web.models.response.event.EventModel
 import com.invoice.contratista.data.source.web.models.response.event.Reserved
 import com.invoice.contratista.utils.Constants.AUTHORIZATION
@@ -36,22 +37,28 @@ interface Service {
     ): Response<ResponseApi<ProductInventoryModel>>
 
     @PUT("reserved/{id}")
-    fun updateProduct(
+    suspend fun updateProduct(
         @Header(AUTHORIZATION) token: String,
         @Path("id") idReserved: String,
         @Query("idProduct") idProduct: String,
     ): Response<ResponseApi<Reserved>>
 
     @GET("product/{id}/availability")
-    fun getAvailability(
+    suspend fun getAvailability(
         @Header(AUTHORIZATION) token: String,
         @Path("id") idProduct: String
     ): Response<ResponseApi<Availability>>
 
     @GET("product/available")
-    fun getAvailable(@Header(AUTHORIZATION) token: String): Response<ResponseApi<List<Available>>>
+    suspend fun getAvailable(@Header(AUTHORIZATION) token: String): Response<ResponseApi<List<Available>>>
 
     @GET("product")
-    fun getAll(@Header(AUTHORIZATION) token: String): Response<ResponseApi<List<ProductInventoryModel>>>
+    suspend fun getAllProducts(@Header(AUTHORIZATION) token: String): Response<ResponseApi<List<ProductInventoryModel>>>
+
+    @GET("budget/{id}")
+    suspend fun getBudgetById(
+        @Header(AUTHORIZATION) token: String,
+        @Path("id") id: String
+    ): Response<ResponseApi<BudgetEntity>>
 
 }

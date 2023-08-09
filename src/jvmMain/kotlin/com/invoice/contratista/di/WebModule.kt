@@ -2,14 +2,8 @@ package com.invoice.contratista.di
 
 import com.invoice.contratista.data.repository.web.*
 import com.invoice.contratista.data.source.web.retrofit.Service
-import com.invoice.contratista.domain.CustomerRepository
-import com.invoice.contratista.domain.EventRepository
-import com.invoice.contratista.domain.ProductRepository
-import com.invoice.contratista.domain.SingRepository
-import com.invoice.contratista.service.EventService
-import com.invoice.contratista.service.ProductService
-import com.invoice.contratista.service.ReservedService
-import com.invoice.contratista.service.SingService
+import com.invoice.contratista.domain.*
+import com.invoice.contratista.service.*
 import com.invoice.contratista.utils.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,6 +21,7 @@ fun webModule() = module {
     single<Retrofit> {
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
+//            .addCallAdapterFactory(.create())
             .baseUrl(Constants.BASE_URL)
             .client(get())
             .build()
@@ -40,10 +35,12 @@ fun webModule() = module {
     factory<EventRepository> { EventRepositoryImp(get()) }
     factory<SingRepository> { SingRepositoryImp(get()) }
     factory<ProductRepository> { ProductRepositoryImp(get()) }
-    factory<ReservedRepositoryImp> { ReservedRepositoryImp(get()) }
+    factory<ReservedRepository> { ReservedRepositoryImp(get()) }
+    factory<BudgetRepository> { BudgetRepositoryImp(get()) }
 
     factory<ProductService> { ProductService(get(), get()) }
     factory<EventService> { EventService(get(), get()) }
     factory<SingService> { SingService(get(), get()) }
     factory<ReservedService> { ReservedService(get(), get()) }
+    factory<BudgetService> { BudgetService(get(), get()) }
 }

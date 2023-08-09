@@ -5,6 +5,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -15,20 +16,20 @@ import com.invoice.contratista.ui.section.part.PartSection
 import com.invoice.contratista.ui.theme.ModifierFieldImages
 import com.invoice.contratista.ui.theme.ModifierFill
 import com.invoice.contratista.utils.*
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun BudgetSection(eventViewModel: EventViewModel) = Column {
+    val scope = rememberCoroutineScope()
     val viewModel = remember { BudgetViewModel() }
     if (eventViewModel.listParts.value.isNotEmpty() && viewModel.part.value == null)
-            viewModel.setPart(eventViewModel.listParts.value[0])
+        viewModel.setPart(eventViewModel.listParts.value[0])
     // region Head
     Row {
         Row(modifier = Modifier.weight(0.5f)) {
-            ElevatedButton(
-                onClick = { eventViewModel.budgetSelected.invoke(null) },
-            ) {
+            IconButton(onClick = { eventViewModel.budgetSelected.invoke(null) }, modifier = ModifierFieldImages) {
                 Icon(
                     painter = painterResource("drawables/back.svg"),
                     contentDescription = BACK,
@@ -55,8 +56,8 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
         }
     }
     // endregion
+    // region Body Budget
     Row {
-        // region Body Budget
         Column(modifier = Modifier.weight(0.5f)) {
             BudgetData(eventViewModel = eventViewModel, stateOnClick = false)
             ElevatedCard(modifier = Modifier.padding(top = 4.dp)) {
@@ -71,14 +72,22 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
                 viewModel.setPart(partEntity)
             }
         }
-        // endregion
         Divider(modifier = Modifier.width(1.dp).fillMaxHeight().padding(8.dp))
         viewModel.part.value?.let {
             PartSection(
                 part = viewModel.part,
                 modifier = Modifier.weight(1f),
+                onUpdateReserved = {
+                    scope.launch {
+                        viewModel.getBudget(it.id) { newBudget ->
+                            eventViewModel.budgetSelected.invoke(null)
+                            eventViewModel.budgetSelected.invoke(newBudget)
+                        }
+                    }
+                },
             )
         }
     }
+    // endregion
 }
 

@@ -22,5 +22,5 @@ class ProductRepositoryImp(private val service: Service) : ProductRepository {
         Resolve(service.getAvailable(token), webStatus).invoke()
 
     override suspend fun getAll(token: String, webStatus: WebStatus<List<ProductInventoryModel>>) =
-        Resolve(service.getAll(token), webStatus).invoke()
+        Resolve(service.getAllProducts(token), webStatus).invoke()
 }
