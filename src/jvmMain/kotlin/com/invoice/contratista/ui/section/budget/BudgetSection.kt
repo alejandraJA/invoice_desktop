@@ -79,7 +79,7 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
                 modifier = Modifier.weight(1f),
                 onUpdateReserved = {
                     scope.launch {
-                        viewModel.getBudget(it.id) { newBudget ->
+                        viewModel.getBudget(eventViewModel.budget.value!!.id) { newBudget ->
                             eventViewModel.budgetSelected.invoke(null)
                             eventViewModel.budgetSelected.invoke(newBudget)
                         }
