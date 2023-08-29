@@ -15,6 +15,7 @@ import com.invoice.contratista.ui.section.auth.AuthenticationViewModel
 import com.invoice.contratista.ui.theme.ModifierFieldImages
 import com.invoice.contratista.ui.theme.ModifierFill
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -63,6 +64,16 @@ fun MainScreen() {
                 },
                 selected = false,
                 onClick = { scope.launch { authenticationViewModel.logout() } })
+            NavigationRailItem(
+                icon = {
+                    Icon(
+                        painter = painterResource("drawables/exit.svg"),
+                        contentDescription = "exit",
+                        modifier = ModifierFieldImages
+                    )
+                },
+                selected = false,
+                onClick = { scope.launch { exitProcess(0) } })
         }
         HorizontalPager(
             modifier = Modifier.fillMaxHeight().weight(1f),

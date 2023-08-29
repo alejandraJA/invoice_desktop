@@ -5,10 +5,11 @@ import com.invoice.contratista.data.repository.web.utils.WebStatus
 open class SuperService(private val userService: UserService) {
     val isUserLogged: Boolean
         get() = userService.isLoggedUser()
-    val token: String?
-        get() = userService.getToken()
-    val condition: Boolean
-        get() = isUserLogged && token!!.isNotEmpty()
+    var token: String?
+        get() = userService.token
+        set(value) {
+            userService.token = value ?: ""
+        }
 
     fun <T> getWebStatus(
         onSuccess: (T) -> Unit,

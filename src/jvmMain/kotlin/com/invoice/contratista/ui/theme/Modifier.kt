@@ -8,6 +8,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 
 val ModifierFieldImages = Modifier.size(24.dp)
+//val ModifierFieldImagesMedium = Modifier.size(16.dp)
 val ModifierFieldImagesSmall = Modifier.size(12.dp)
 val ModifierPaddingScreen = Modifier.padding(16.dp)
 val ModifierCard = Modifier.padding(8.dp)

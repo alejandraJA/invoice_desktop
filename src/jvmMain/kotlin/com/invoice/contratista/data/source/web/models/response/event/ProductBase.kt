@@ -11,6 +11,7 @@ data class ProductBase(
     val taxability: String,
     val unitKey: String,
     val unitName: String,
+    val type: Boolean,
     val priceEntities: MutableList<PriceEntity>,
     val costEntities: MutableList<CostEntity>,
 )

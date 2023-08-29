@@ -16,10 +16,11 @@ class SingService(
 ) : SuperService(userService) {
 
     suspend fun updateToken(success: (TokenModel) -> Unit, onError: (String) -> Unit) = withContext(Dispatchers.IO) {
-        repository.updateToken(
-            userService.getUpdateTokenRequest(),
-            getWebStatus(success, onError)
-        )
+        if (isUserLogged)
+            repository.updateToken(
+                userService.getUpdateTokenRequest(),
+                getWebStatus(success, onError)
+            )
     }
 
     suspend fun login(
@@ -34,7 +35,7 @@ class SingService(
                 onError.invoke("Email or password incorrect!")
                 return@withContext
             }
-            val request = UpdateTokenRequest(email, userService.getToken()!!)
+            val request = UpdateTokenRequest(email, token!!)
             repository.updateToken(request, getWebStatus(onSuccess) { error ->
                 logout()
                 onError.invoke(error)
@@ -43,6 +44,7 @@ class SingService(
         }
         repository.singIn(SingRequest(email, password), getWebStatus({ tokenModel ->
             userService.singIn(UserLogged(email, tokenModel!!.token, password))
+            token = tokenModel.token
             onSuccess.invoke(tokenModel)
         }, { error ->
             logout()

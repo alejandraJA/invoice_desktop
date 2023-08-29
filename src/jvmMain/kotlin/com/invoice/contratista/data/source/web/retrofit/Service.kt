@@ -6,6 +6,7 @@ import com.invoice.contratista.data.source.web.models.response.*
 import com.invoice.contratista.data.source.web.models.response.customer.CustomerResponse
 import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
 import com.invoice.contratista.data.source.web.models.response.event.EventModel
+import com.invoice.contratista.data.source.web.models.response.event.Part
 import com.invoice.contratista.data.source.web.models.response.event.Reserved
 import com.invoice.contratista.utils.Constants.AUTHORIZATION
 import retrofit2.Response
@@ -36,13 +37,6 @@ interface Service {
         @Path("id") idProduct: String
     ): Response<ResponseApi<ProductInventoryModel>>
 
-    @PUT("reserved/{id}")
-    suspend fun updateProduct(
-        @Header(AUTHORIZATION) token: String,
-        @Path("id") idReserved: String,
-        @Query("idProduct") idProduct: String,
-    ): Response<ResponseApi<Reserved>>
-
     @GET("product/{id}/availability")
     suspend fun getAvailability(
         @Header(AUTHORIZATION) token: String,
@@ -60,5 +54,33 @@ interface Service {
         @Header(AUTHORIZATION) token: String,
         @Path("id") id: String
     ): Response<ResponseApi<BudgetEntity>>
+
+    @POST("budget/{id}/createPart")
+    suspend fun createPart(
+        @Header(AUTHORIZATION) token: String,
+        @Path("id") idBudget: String
+    ): Response<ResponseApi<List<Part>>>
+
+    @PUT("reserved/{id}")
+    suspend fun updateProductInPart(
+        @Header(AUTHORIZATION) token: String,
+        @Path("id") idReserved: String,
+        @Query("idProduct") idProduct: String,
+    ): Response<ResponseApi<Reserved>>
+
+    @DELETE(("reserved/{idReserved}"))
+    suspend fun deletePart(
+        @Header(AUTHORIZATION) token: String,
+        @Path("idReserved") idReserved: String
+    ): Response<ResponseApi<Boolean>>
+
+
+    @PUT("part/{idReserved}")
+    suspend fun updatePart(
+        @Header(AUTHORIZATION) token: String,
+        @Path("idReserved") idReserved: String,
+        @Query("quantity") quantity:Int,
+        @Query("discount") discount: Double,
+    ): Response<ResponseApi<Part>>
 
 }

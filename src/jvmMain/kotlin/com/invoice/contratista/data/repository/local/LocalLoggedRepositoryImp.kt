@@ -24,8 +24,8 @@ class LocalLoggedRepositoryImp : UserLoggedRepository {
     override fun get() = UserLogged(email = _email, token = _token, password = _password)
 
     override fun singIn(userLogged: UserLogged) {
-        _token = userLogged.token
         _email = userLogged.email
+        _token = userLogged.token
         _password = userLogged.password
     }
 
@@ -41,7 +41,7 @@ class LocalLoggedRepositoryImp : UserLoggedRepository {
         this._token = token
     }
 
-    override fun isUserLogged() = _token.isNotEmpty()
+    override fun isUserLogged() = _token.isNotEmpty() && _email.isNotEmpty() && _password.isNotEmpty()
     override fun login(email: String, password: String): Boolean =
         this._email == email && this._password == password
 

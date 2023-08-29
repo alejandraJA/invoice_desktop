@@ -11,6 +11,7 @@ import com.invoice.contratista.utils.EMAIL_CANNOT_EQUALS_PASSWORD
 import com.invoice.contratista.utils.PASSWORD_NOT_MATCH
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.system.exitProcess
 
 class AuthenticationViewModel : KoinComponent {
     private val singService: SingService by inject()
@@ -114,7 +115,10 @@ class AuthenticationViewModel : KoinComponent {
         singService.login(email, password, onSuccessLogin, onError)
     }
 
-    fun logout() = singService.logout()
+    fun logout() {
+        singService.logout()
+        exitProcess(0)
+    }
 
     val onLostYourPass = {
         println("Lost yur pass")

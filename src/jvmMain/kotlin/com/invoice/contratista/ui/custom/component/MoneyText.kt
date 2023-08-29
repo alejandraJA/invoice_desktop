@@ -20,39 +20,40 @@ import com.invoice.contratista.utils.MoneyUtils.moneyFormat
 
 @Composable
 fun MoneyText(
-    indicator: String,
+    indicator: String = "",
     money: Double,
     factor: String = "",
     gain: Boolean = false,
-    withholding: Boolean = false
-) = Row(verticalAlignment = Alignment.CenterVertically) {
+    withholding: Boolean = false,
+    modifierRow: Modifier = Modifier
+) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifierRow) {
     val modifier =
         if (factor == EXENTO || gain) ModifierFieldImages.alpha(0.5f)
         else ModifierFieldImages
-    Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-        if (factor.isNotEmpty())
-            Icon(
-                painter = painterResource(
-                    "drawables/${
-                        if (withholding) "remove" else "add"
-                    }.svg"
-                ),
-                contentDescription = "withholding",
-                modifier = ModifierFieldImagesSmall.alpha(0.5f)
+    if (factor.isNotEmpty() || indicator.isNotEmpty() || factor.isNotEmpty())
+        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+            if (factor.isNotEmpty())
+                Icon(
+                    painter = painterResource(
+                        "drawables/${
+                            if (withholding) "remove" else "add"
+                        }.svg"
+                    ),
+                    contentDescription = "withholding",
+                    modifier = ModifierFieldImagesSmall.alpha(0.5f)
+                )
+            Spacer(modifier = Modifier.weight(1f))
+            if (indicator.isNotEmpty()) Text(
+                text = indicator,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = (if (factor == EXENTO || gain) Alpha else Modifier)
             )
-
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = indicator,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = if (factor == EXENTO || gain) Alpha else Modifier
-        )
-        if (factor.isNotEmpty()) Text(
-            text = factor,
-            modifier = Alpha.padding(start = 4.dp),
-            style = MaterialTheme.typography.bodySmall
-        )
-    }
+            if (factor.isNotEmpty()) Text(
+                text = factor,
+                modifier = Alpha.padding(start = 4.dp),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource("drawables/money.svg"),

@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.invoice.contratista.data.source.web.models.response.event.Part
 import com.invoice.contratista.ui.section.CustomerDataSection
 import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.section.part.PartLazy
@@ -65,11 +66,17 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
                     CustomerDataSection(it)
                 }
             }
-            ElevatedButton(onClick = {}, modifier = ModifierFill.padding(top = 4.dp, bottom = 4.dp)) {
+            ElevatedButton(onClick = {
+                scope.launch {
+                    viewModel.addPart(eventViewModel.budget.value!!.id) { partList: List<Part> ->
+                        eventViewModel.listParts.value = partList
+                    }
+                }
+            }, modifier = ModifierFill.padding(top = 4.dp, bottom = 4.dp)) {
                 Text(text = ADD_PART)
             }
-            PartLazy(eventViewModel.listParts.value) { partEntity ->
-                viewModel.setPart(partEntity)
+            PartLazy(eventViewModel.listParts.value) { part ->
+                viewModel.setPart(part)
             }
         }
         Divider(modifier = Modifier.width(1.dp).fillMaxHeight().padding(8.dp))
@@ -77,17 +84,21 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
             PartSection(
                 part = viewModel.part,
                 modifier = Modifier.weight(1f),
-                onUpdateReserved = {
+                onChangePart = {
                     scope.launch {
-                        viewModel.getBudget(eventViewModel.budget.value!!.id) { newBudget ->
-                            eventViewModel.budgetSelected.invoke(null)
-                            eventViewModel.budgetSelected.invoke(newBudget)
-                        }
+                        onGetBudget(viewModel, eventViewModel)
                     }
-                },
+                }
             )
         }
     }
     // endregion
+}
+
+suspend fun onGetBudget(viewModel: BudgetViewModel, eventViewModel: EventViewModel) {
+    viewModel.getBudget(eventViewModel.budget.value!!.id) { newBudget ->
+        eventViewModel.budgetSelected.invoke(null)
+        eventViewModel.budgetSelected.invoke(newBudget)
+    }
 }
 

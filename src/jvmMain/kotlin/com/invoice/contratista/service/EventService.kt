@@ -14,7 +14,7 @@ class EventService(
         onSuccess: (List<EventModel>) -> Unit,
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        if (condition) {
+        if (isUserLogged) {
             repository.getAll(token!!, getWebStatus(onSuccess, onError))
         }
     }

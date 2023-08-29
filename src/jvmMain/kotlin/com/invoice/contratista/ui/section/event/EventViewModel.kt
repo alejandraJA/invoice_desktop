@@ -23,7 +23,7 @@ class EventViewModel : KoinComponent {
     val noteList: MutableState<List<NoteEntity>> = mutableStateOf(listOf())
     val dateList: MutableState<List<DateEntity>> = mutableStateOf(listOf())
 
-    val listParts: MutableState<List<PartEntity>> = mutableStateOf(listOf())
+    val listParts: MutableState<List<Part>> = mutableStateOf(listOf())
 
     val budgetSelected = { budgetEntity: BudgetEntity? ->
         budget.value = budgetEntity

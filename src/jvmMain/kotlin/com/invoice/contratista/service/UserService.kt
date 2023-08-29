@@ -7,7 +7,13 @@ import com.invoice.contratista.domain.UserLoggedRepository
 class UserService(private val repository: UserLoggedRepository) {
 
     fun getUpdateTokenRequest() : UpdateTokenRequest= repository.getTokenRequest()
-    fun getToken() = repository.getToken()
+
+    var token: String?
+        get() = repository.getToken()
+        set(value) = repository.setToken(value ?: "")
+//    fun getToken() = repository.getToken()
+//
+//    fun setToken(token: String) = repository.setToken(token)
 
     fun isLoggedUser(): Boolean = repository.isUserLogged()
 

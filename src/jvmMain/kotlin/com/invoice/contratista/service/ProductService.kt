@@ -16,7 +16,7 @@ class ProductService(
         onSuccess: (ProductInventoryModel) -> Unit,
         onError: (String) -> Unit,
     ) = withContext(Dispatchers.IO) {
-        if (condition) {
+        if (isUserLogged) {
             repository.getByIdProduct(token!!, productId, getWebStatus(onSuccess, onError))
         }
     }
@@ -25,7 +25,7 @@ class ProductService(
         onSuccess: (List<ProductInventoryModel>) -> Unit,
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        if (condition) {
+        if (isUserLogged) {
             repository.getAll(token!!, getWebStatus(onSuccess, onError))
         }
     }
@@ -35,7 +35,7 @@ class ProductService(
         onSuccess: (Availability) -> Unit,
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        if (condition) {
+        if (isUserLogged) {
             repository.getAvailability(token!!, idProduct, getWebStatus(onSuccess, onError))
         }
     }

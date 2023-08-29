@@ -1,6 +1,6 @@
 package com.invoice.contratista.data.source.web.models.response.event
 
-data class PartEntity(
+data class Part(
     val id: String,
     val number: Int,
     var quantity: Int,

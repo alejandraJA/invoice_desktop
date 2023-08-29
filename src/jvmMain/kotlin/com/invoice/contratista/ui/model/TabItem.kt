@@ -14,7 +14,9 @@ sealed class TabItem(
 
     lateinit var onSuccess: () -> Unit
     var screen: ComposableFun = if (screenType) {
-        { LoginSection { onSuccess.invoke() } }
+        { LoginSection {
+            onSuccess.invoke()
+        } }
     } else {
         { SingUpSection { onSuccess.invoke() } }
     }

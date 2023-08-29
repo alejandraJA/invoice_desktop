@@ -6,5 +6,5 @@ data class BudgetEntity(
     val date: String,
     val conditions: String,
     val status: String,
-    val partEntities: List<PartEntity>,
+    val partEntities: List<Part>,
 )

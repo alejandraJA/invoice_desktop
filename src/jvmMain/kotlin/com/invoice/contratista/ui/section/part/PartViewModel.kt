@@ -3,7 +3,7 @@ package com.invoice.contratista.ui.section.part
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.data.source.web.models.response.event.PartEntity
+import com.invoice.contratista.data.source.web.models.response.event.Part
 import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
 import com.invoice.contratista.service.ReservedService
 import com.invoice.contratista.utils.CUOTA
@@ -15,12 +15,13 @@ import org.koin.core.component.inject
 class PartViewModel : KoinComponent {
 
     private val service: ReservedService by inject()
+
     val inventory: MutableState<ProductInventoryModel?> = mutableStateOf(null)
     val quantity: MutableState<Int> = mutableStateOf(0)
     val subTotal: MutableState<Double> = mutableStateOf(0.0)
     val total: MutableState<Double> = mutableStateOf(0.0)
     val totalGain: MutableState<Double> = mutableStateOf(0.0)
-    val part: MutableState<PartEntity?> = mutableStateOf(null)
+    val part: MutableState<Part?> = mutableStateOf(null)
     val gainForUnit: MutableState<Double> = mutableStateOf(0.0)
     val amount: MutableState<Double> = mutableStateOf(0.0)
     var cost: MutableState<Double> = mutableStateOf(0.0)
@@ -32,11 +33,15 @@ class PartViewModel : KoinComponent {
     private var _onUpdateReserved: (() -> Unit)? = null
     private val error: MutableState<String> = mutableStateOf("")
 
+    val onError = { e: String ->
+        error.value = e
+    }
+
 
     val selectProduct: MutableState<Boolean> = mutableStateOf(false)
 
     fun setPart(
-        part: MutableState<PartEntity?>
+        part: MutableState<Part?>
     ) {
         this.part.value = part.value
         if (part.value != null) cost.value = part.value!!.reserved.inventory.product.costEntity.unitCost
@@ -50,12 +55,10 @@ class PartViewModel : KoinComponent {
             loading.value = false
             part.value?.reserved = it
             _onUpdateReserved?.invoke()
-        },
-        onError = {
-            error.value = ""
-        })
+        }, onError
+    )
 
-    fun calculate(part: MutableState<PartEntity?>) {
+    fun calculate(part: MutableState<Part?>) {
         this.part.value = part.value
         quantity.value =
             if (this.part.value != null) this.part.value!!.quantity
@@ -109,6 +112,20 @@ class PartViewModel : KoinComponent {
 
     fun setOnUpdateReserved(onUpdateReserved: () -> Unit) {
         this._onUpdateReserved = onUpdateReserved
+    }
+
+    suspend fun deletePart(onSuccess: (Boolean) -> Unit) {
+        service.deletePart(part.value!!.reserved.id, onSuccess, onError)
+    }
+
+    suspend fun updatePart(onSuccess: (Part) -> Unit) {
+        service.updatePart(
+            part.value!!.reserved.id,
+            quantity.value,
+            _discount.value,
+            onSuccess,
+            onError
+        )
     }
 
 }

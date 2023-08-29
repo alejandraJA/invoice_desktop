@@ -28,10 +28,51 @@ import kotlinx.coroutines.launch
 @Composable
 fun PartContent(
     viewModel: PartViewModel,
-    modifier: Modifier
+    modifier: Modifier,
+    onChangePart: () -> Unit
 ) = Column(modifier) {
     val scope = rememberCoroutineScope()
-    Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
+    Row(modifier = ModifierCard, verticalAlignment = Alignment.CenterVertically) {
+        Text(text = "$PART ${viewModel.part.value!!.number}", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = {
+            scope.launch {
+                viewModel.deletePart {
+                    onChangePart.invoke()
+                }
+            }
+        }, modifier = ModifierFieldImages) {
+            Icon(
+                painter = painterResource("drawables/delete.svg"),
+                contentDescription = DELETE,
+                modifier = ModifierFieldImages
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        IconButton(onClick = {
+            viewModel.selectProduct.value = true
+        }, modifier = ModifierFieldImages) {
+            Icon(
+                painter = painterResource("drawables/change.svg"),
+                contentDescription = CHANGE,
+                modifier = ModifierFieldImages
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        IconButton(onClick = {
+            scope.launch {
+                viewModel.updatePart {
+                    onChangePart.invoke()
+                }
+            }
+        }, modifier = ModifierFieldImages) {
+            Icon(
+                painter = painterResource("drawables/save.svg"),
+                contentDescription = SAVE,
+                modifier = ModifierFieldImages
+            )
+        }
+    }
     // region Product Select
     ElevatedCard(onClick = {
         viewModel.selectProduct.value = true
@@ -40,13 +81,23 @@ fun PartContent(
             TextWithTitle(
                 title = PRODUCT_SERVICE,
                 text = viewModel.part.value!!.reserved.inventory.product.name,
-                modifier = Modifier.padding(end = 4.dp).weight(1f),
+                modifier = Modifier.weight(1f),
             )
-            Spacer(modifier = Modifier.width(8.dp).height(1.dp))
             TextWithTitle(
                 title = UNIT_NAME,
                 text = viewModel.part.value!!.reserved.inventory.product.productBase.unitName,
-                modifier = Modifier.padding(start = 4.dp).weight(1f),
+                modifier = Modifier.padding(start = 4.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp).height(1.dp))
+            Icon(
+                painter = painterResource(
+                    "drawables/${
+                        if (viewModel.part.value!!.reserved.inventory.product.productBase.type) "inventory"
+                        else "engineering"
+                    }.svg"
+                ),
+                contentDescription = TYPE,
+                modifier = ModifierFieldImages
             )
         }
     }

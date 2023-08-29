@@ -2,16 +2,23 @@ package com.invoice.contratista.ui.section.product
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
 import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.theme.Alpha
 import com.invoice.contratista.ui.theme.ModifierCard
+import com.invoice.contratista.ui.theme.ModifierFieldImages
 import com.invoice.contratista.utils.*
 
 @ExperimentalMaterial3Api
@@ -27,10 +34,23 @@ fun ProductSection(inventory: ProductInventoryModel) = Column(modifier = Modifie
                 title = PRODUCT_SERVICE,
                 text = product.productBase.description,
             )
-            TextWithTitle(
-                title = UNIT_NAME,
-                text = product.productBase.unitName,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextWithTitle(
+                    title = UNIT_NAME,
+                    text = product.productBase.unitName,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(
+                        "drawables/${
+                            if (inventory.product.productBase.type) "inventory"
+                            else "engineering"
+                        }.svg"
+                    ),
+                    contentDescription = TYPE,
+                    modifier = ModifierFieldImages.padding(end = 4.dp)
+                )
+            }
         }
         Column(modifier = Modifier.weight(1f)) {
             TextWithTitle(
