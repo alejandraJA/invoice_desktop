@@ -9,14 +9,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.Part
 import com.invoice.contratista.ui.section.CustomerDataSection
 import com.invoice.contratista.ui.section.event.EventViewModel
 import com.invoice.contratista.ui.section.part.PartLazy
 import com.invoice.contratista.ui.section.part.PartSection
 import com.invoice.contratista.ui.theme.ModifierFieldImages
-import com.invoice.contratista.ui.theme.ModifierFill
-import com.invoice.contratista.utils.*
+import com.invoice.contratista.utils.BACK
+import com.invoice.contratista.utils.BUDGET_SECTION
+import com.invoice.contratista.utils.PART_SECTION
+import com.invoice.contratista.utils.PRODUCT_SECTION
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -63,21 +64,21 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
             BudgetData(eventViewModel = eventViewModel, stateOnClick = false)
             ElevatedCard(modifier = Modifier.padding(top = 4.dp)) {
                 eventViewModel.customer.value?.let {
-                    CustomerDataSection(it)
+                    CustomerDataSection(customerEntity = it, resume = false)
                 }
             }
-            ElevatedButton(onClick = {
-                scope.launch {
-                    viewModel.addPart(eventViewModel.budget.value!!.id) { partList: List<Part> ->
-                        eventViewModel.listParts.value = partList
+            Spacer(modifier = Modifier.height(4.dp))
+            PartLazy(
+                eventViewModel.listParts.value,
+                partSelected = { part ->
+                    viewModel.setPart(part)
+                },
+                addPart = {
+                    scope.launch {
+                        viewModel.addPart(eventViewModel)
                     }
                 }
-            }, modifier = ModifierFill.padding(top = 4.dp, bottom = 4.dp)) {
-                Text(text = ADD_PART)
-            }
-            PartLazy(eventViewModel.listParts.value) { part ->
-                viewModel.setPart(part)
-            }
+            )
         }
         Divider(modifier = Modifier.width(1.dp).fillMaxHeight().padding(8.dp))
         viewModel.part.value?.let {
@@ -86,19 +87,12 @@ fun BudgetSection(eventViewModel: EventViewModel) = Column {
                 modifier = Modifier.weight(1f),
                 onChangePart = {
                     scope.launch {
-                        onGetBudget(viewModel, eventViewModel)
+                        viewModel.getBudget(eventViewModel)
                     }
                 }
             )
         }
     }
     // endregion
-}
-
-suspend fun onGetBudget(viewModel: BudgetViewModel, eventViewModel: EventViewModel) {
-    viewModel.getBudget(eventViewModel.budget.value!!.id) { newBudget ->
-        eventViewModel.budgetSelected.invoke(null)
-        eventViewModel.budgetSelected.invoke(newBudget)
-    }
 }
 

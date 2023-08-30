@@ -1,7 +1,7 @@
-package com.invoice.contratista.data.source.web.models.response.event
+package com.invoice.contratista.data.source.web.models
 
-data class CustomerEntity(
-    val addressEntity: AddressEntity,
+data class Customer(
+    val addressEntity: Address,
     val createdAt: String,
     val email: String,
     val id: String,

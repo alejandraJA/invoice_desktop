@@ -10,15 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.EventModel
+import com.invoice.contratista.data.source.web.models.Event
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 
 @ExperimentalMaterial3Api
 @Composable
 fun EventItem(
-    eventModel: EventModel,
+    eventModel: Event,
     modifier: Modifier,
-    eventSelected: (EventModel?) -> Unit
+    eventSelected: (Event?) -> Unit
 ) = ElevatedCard(
     onClick = { eventSelected.invoke(eventModel) },
     modifier = modifier

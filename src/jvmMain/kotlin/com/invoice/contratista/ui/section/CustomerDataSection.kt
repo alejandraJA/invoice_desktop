@@ -5,15 +5,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.invoice.contratista.data.source.web.models.response.event.CustomerEntity
+import com.invoice.contratista.data.source.web.models.Customer
 import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.theme.ModifierPaddingScreen
 import com.invoice.contratista.utils.*
 
 @Composable
-fun CustomerDataSection(customerEntity: CustomerEntity) = Column(
-    modifier = ModifierPaddingScreen.fillMaxWidth()
-) {
+fun CustomerDataSection(
+    customerEntity: Customer,
+    resume: Boolean = true
+) = Column(modifier = ModifierPaddingScreen.fillMaxWidth()) {
     TextWithTitle(
         title = LEGAL_NAME,
         text = customerEntity.legalName
@@ -21,12 +22,12 @@ fun CustomerDataSection(customerEntity: CustomerEntity) = Column(
     Row {
         Column(modifier = Modifier.weight(1f)) {
             TextWithTitle(
+                title = PHONE,
+                text = customerEntity.phone
+            )
+            if (resume) TextWithTitle(
                 title = TAX_IDENTIFICATION,
                 text = customerEntity.taxId,
-            )
-            TextWithTitle(
-                title = FISCAL_REGIME,
-                text = customerEntity.taxSystem
             )
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -34,13 +35,13 @@ fun CustomerDataSection(customerEntity: CustomerEntity) = Column(
                 title = EMAIL,
                 text = customerEntity.email
             )
-            TextWithTitle(
-                title = PHONE,
-                text = customerEntity.phone
+            if (resume) TextWithTitle(
+                title = FISCAL_REGIME,
+                text = customerEntity.taxSystem
             )
         }
     }
-    TextWithTitle(
+    if (resume) TextWithTitle(
         title = ADDRESS,
         text = customerEntity.addressEntity.getAddress()
     )

@@ -10,10 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.DateEntity
+import com.invoice.contratista.data.source.web.models.Date
 
 @Composable
-fun DatesLazy(dateEntities: List<DateEntity>, weight: Modifier) = LazyVerticalGrid(
+fun DatesLazy(dateEntities: List<Date>, weight: Modifier) = LazyVerticalGrid(
     modifier = weight.padding(start = 8.dp, top = 8.dp),
     columns = GridCells.Fixed(2),
     verticalArrangement = Arrangement.spacedBy(4.dp),

@@ -13,12 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.PriceEntity
+import com.invoice.contratista.data.source.web.models.Price
 import com.invoice.contratista.ui.theme.ModifierCard
 
 @ExperimentalMaterial3Api
 @Composable
-fun PriceLazy(priceEntities: List<PriceEntity>) = LazyVerticalGrid(
+fun PriceLazy(priceEntities: List<Price>) = LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     verticalArrangement = Arrangement.spacedBy(4.dp),
     horizontalArrangement = Arrangement.spacedBy(4.dp),

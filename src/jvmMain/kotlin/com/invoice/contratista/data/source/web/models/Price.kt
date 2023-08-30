@@ -1,4 +1,4 @@
-package com.invoice.contratista.data.source.web.models.response.event
+package com.invoice.contratista.data.source.web.models
 
 data class Price(
     val id: String,

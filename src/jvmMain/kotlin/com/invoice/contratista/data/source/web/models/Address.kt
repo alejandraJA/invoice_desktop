@@ -1,6 +1,6 @@
-package com.invoice.contratista.data.source.web.models.response.event
+package com.invoice.contratista.data.source.web.models
 
-data class AddressEntity(
+data class Address(
     val city: String,
     val country: String,
     val exterior: String,

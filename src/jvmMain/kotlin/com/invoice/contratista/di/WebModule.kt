@@ -21,7 +21,6 @@ fun webModule() = module {
     single<Retrofit> {
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-//            .addCallAdapterFactory(.create())
             .baseUrl(Constants.BASE_URL)
             .client(get())
             .build()

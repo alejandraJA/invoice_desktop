@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.EventModel
+import com.invoice.contratista.data.source.web.models.Event
 import com.invoice.contratista.ui.custom.component.TextField
 import com.invoice.contratista.ui.custom.component.TextFieldModel
 import com.invoice.contratista.ui.section.CustomerDataSection
@@ -23,7 +23,7 @@ import com.invoice.contratista.utils.NOTE
 
 @ExperimentalMaterial3Api
 @Composable
-fun EventDataCard(event: EventModel) {
+fun EventDataCard(event: Event) {
     ElevatedCard(modifier = Modifier.padding(bottom = 8.dp)) {
         Row(
             horizontalArrangement = Arrangement.Center,

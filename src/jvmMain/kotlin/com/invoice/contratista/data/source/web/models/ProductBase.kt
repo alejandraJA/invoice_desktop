@@ -1,6 +1,4 @@
-package com.invoice.contratista.data.source.web.models.response.event
-
-import com.invoice.contratista.data.source.web.models.response.CostEntity
+package com.invoice.contratista.data.source.web.models
 
 data class ProductBase(
     val description: String,
@@ -12,6 +10,6 @@ data class ProductBase(
     val unitKey: String,
     val unitName: String,
     val type: Boolean,
-    val priceEntities: MutableList<PriceEntity>,
-    val costEntities: MutableList<CostEntity>,
+    val priceEntities: MutableList<Price>,
+    val costEntities: MutableList<Cost>,
 )

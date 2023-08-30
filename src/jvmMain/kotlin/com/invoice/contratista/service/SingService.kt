@@ -1,10 +1,10 @@
 package com.invoice.contratista.service
 
 import com.invoice.contratista.data.source.local.UserLogged
-import com.invoice.contratista.data.source.web.models.request.SingRequest
-import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
-import com.invoice.contratista.data.source.web.models.response.TokenModel
-import com.invoice.contratista.data.source.web.models.response.UserModel
+import com.invoice.contratista.data.source.web.models.SingRequest
+import com.invoice.contratista.data.source.web.models.Token
+import com.invoice.contratista.data.source.web.models.UpdateTokenRequest
+import com.invoice.contratista.data.source.web.models.User
 import com.invoice.contratista.domain.SingRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,7 +15,7 @@ class SingService(
     private val userService: UserService
 ) : SuperService(userService) {
 
-    suspend fun updateToken(success: (TokenModel) -> Unit, onError: (String) -> Unit) = withContext(Dispatchers.IO) {
+    suspend fun updateToken(success: (Token) -> Unit, onError: (String) -> Unit) = withContext(Dispatchers.IO) {
         if (isUserLogged)
             repository.updateToken(
                 userService.getUpdateTokenRequest(),
@@ -26,7 +26,7 @@ class SingService(
     suspend fun login(
         email: String,
         password: String,
-        onSuccess: (TokenModel) -> Unit,
+        onSuccess: (Token) -> Unit,
         onError: (String) -> Unit,
         context: CoroutineContext = Dispatchers.IO,
     ) = withContext(context = context) {
@@ -54,7 +54,7 @@ class SingService(
 
     suspend fun singUp(
         request: SingRequest,
-        onSuccess: (UserModel) -> Unit,
+        onSuccess: (User) -> Unit,
         onError: (String) -> Unit,
         context: CoroutineContext = Dispatchers.IO,
     ) = withContext(context = context) {

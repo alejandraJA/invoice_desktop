@@ -2,9 +2,9 @@ package com.invoice.contratista.ui.section.part
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
-import com.invoice.contratista.data.source.web.models.response.event.Part
-import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
+import com.invoice.contratista.data.source.web.models.ProductInventory
+import com.invoice.contratista.data.source.web.models.Part
+import com.invoice.contratista.data.source.web.models.Tax
 import com.invoice.contratista.service.ReservedService
 import com.invoice.contratista.utils.CUOTA
 import com.invoice.contratista.utils.EXENTO
@@ -16,7 +16,7 @@ class PartViewModel : KoinComponent {
 
     private val service: ReservedService by inject()
 
-    val inventory: MutableState<ProductInventoryModel?> = mutableStateOf(null)
+    val inventory: MutableState<ProductInventory?> = mutableStateOf(null)
     val quantity: MutableState<Int> = mutableStateOf(0)
     val subTotal: MutableState<Double> = mutableStateOf(0.0)
     val total: MutableState<Double> = mutableStateOf(0.0)
@@ -26,7 +26,7 @@ class PartViewModel : KoinComponent {
     val amount: MutableState<Double> = mutableStateOf(0.0)
     var cost: MutableState<Double> = mutableStateOf(0.0)
     private val _discount: MutableState<Double> = mutableStateOf(0.0)
-    private val _subTax: MutableState<List<TaxEntity>> = mutableStateOf(listOf())
+    private val _subTax: MutableState<List<Tax>> = mutableStateOf(listOf())
     private val _sumTax: MutableState<Double> = mutableStateOf(0.0)
     private val _restTax: MutableState<Double> = mutableStateOf(0.0)
     private val loading: MutableState<Boolean> = mutableStateOf(false)

@@ -9,10 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.NoteEntity
+import com.invoice.contratista.data.source.web.models.Note
 
 @Composable
-fun NotesLazy(noteEntities: List<NoteEntity>, weight: Modifier) = LazyColumn(
+fun NotesLazy(noteEntities: List<Note>, weight: Modifier) = LazyColumn(
     modifier = weight.padding(end = 8.dp, top = 8.dp, start = 8.dp),
     verticalArrangement = Arrangement.spacedBy(4.dp),
 ) {

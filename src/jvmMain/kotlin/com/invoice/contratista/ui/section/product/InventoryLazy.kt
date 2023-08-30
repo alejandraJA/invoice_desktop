@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
+import com.invoice.contratista.data.source.web.models.ProductInventory
 import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.theme.ModifierCard
 import com.invoice.contratista.ui.theme.ModifierFieldImages
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
-fun InventoryLazy(onCloseRequest: (ProductInventoryModel) -> Unit) = Window(
+fun InventoryLazy(onCloseRequest: (ProductInventory) -> Unit) = Window(
     onCloseRequest = {},
     title = SELECT_PRODUCT,
     state = WindowState(placement = WindowPlacement.Maximized),
@@ -57,7 +57,7 @@ fun InventoryLazy(onCloseRequest: (ProductInventoryModel) -> Unit) = Window(
 
 @ExperimentalMaterial3Api
 @Composable
-fun InventoryItem(inventory: ProductInventoryModel, onClick: (ProductInventoryModel) -> Unit) =
+fun InventoryItem(inventory: ProductInventory, onClick: (ProductInventory) -> Unit) =
     ElevatedCard(onClick = {
         onClick.invoke(inventory)
     }) {

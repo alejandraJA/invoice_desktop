@@ -9,11 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.ScheduleEntity
+import com.invoice.contratista.data.source.web.models.Schedule
 import com.invoice.contratista.utils.getAddress
 
 @Composable
-fun SchedulesLazy(scheduleEntities: List<ScheduleEntity>, weight: Modifier) = LazyColumn(
+fun SchedulesLazy(scheduleEntities: List<Schedule>, weight: Modifier) = LazyColumn(
     modifier = weight.padding(end = 8.dp, top = 8.dp),
     verticalArrangement = Arrangement.spacedBy(4.dp),
 ) {

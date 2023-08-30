@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
+import com.invoice.contratista.data.source.web.models.ProductInventory
 import com.invoice.contratista.ui.custom.component.TextWithTitle
 import com.invoice.contratista.ui.theme.Alpha
 import com.invoice.contratista.ui.theme.ModifierCard
@@ -24,7 +24,7 @@ import com.invoice.contratista.utils.*
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun ProductSection(inventory: ProductInventoryModel) = Column(modifier = ModifierCard) {
+fun ProductSection(inventory: ProductInventory) = Column(modifier = ModifierCard) {
     val alpha = Alpha.padding(top = 4.dp)
     val product = inventory.product
     val typography = MaterialTheme.typography.bodySmall

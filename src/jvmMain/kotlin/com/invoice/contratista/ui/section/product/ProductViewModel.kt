@@ -2,8 +2,8 @@ package com.invoice.contratista.ui.section.product
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.invoice.contratista.data.source.web.models.response.Availability
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
+import com.invoice.contratista.data.source.web.models.Availability
+import com.invoice.contratista.data.source.web.models.ProductInventory
 import com.invoice.contratista.service.ProductService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -14,7 +14,7 @@ class ProductViewModel : KoinComponent {
     private val loading: MutableState<Boolean> = mutableStateOf(true)
     private val error: MutableState<String> = mutableStateOf("")
 
-    val inventory = mutableStateOf<List<ProductInventoryModel>>(listOf())
+    val inventory = mutableStateOf<List<ProductInventory>>(listOf())
     val availability = mutableStateOf<Availability?>(null)
 
     private val onError = { e: String ->

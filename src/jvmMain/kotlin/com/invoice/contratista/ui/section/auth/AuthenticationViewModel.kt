@@ -2,9 +2,9 @@ package com.invoice.contratista.ui.section.auth
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.invoice.contratista.data.source.web.models.request.SingRequest
-import com.invoice.contratista.data.source.web.models.response.TokenModel
-import com.invoice.contratista.data.source.web.models.response.UserModel
+import com.invoice.contratista.data.source.web.models.SingRequest
+import com.invoice.contratista.data.source.web.models.Token
+import com.invoice.contratista.data.source.web.models.User
 import com.invoice.contratista.service.SingService
 import com.invoice.contratista.utils.Constants
 import com.invoice.contratista.utils.EMAIL_CANNOT_EQUALS_PASSWORD
@@ -35,11 +35,11 @@ class AuthenticationViewModel : KoinComponent {
         errorState.value = error
     }
 
-    private val onSuccessLogin = { _: TokenModel ->
+    private val onSuccessLogin = { _: Token ->
         onSing()
     }
 
-    private val onSuccessSingUp = { _: UserModel ->
+    private val onSuccessSingUp = { _: User ->
         onSing()
     }
 
@@ -105,7 +105,7 @@ class AuthenticationViewModel : KoinComponent {
         errorEmail.value = ""
     }
 
-    suspend fun singUp(request:SingRequest) {
+    suspend fun singUp(request: SingRequest) {
         loadingDialogState.value = true
         singService.singUp(request, onSuccessSingUp, onError)
     }

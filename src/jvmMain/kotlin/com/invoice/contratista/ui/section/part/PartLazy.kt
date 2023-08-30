@@ -1,32 +1,25 @@
 package com.invoice.contratista.ui.section.part
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.Part
+import com.invoice.contratista.data.source.web.models.Part
 import com.invoice.contratista.ui.custom.component.MoneyText
 import com.invoice.contratista.ui.theme.ModifierFill
-import com.invoice.contratista.utils.PART
-import com.invoice.contratista.utils.PRODUCT_SERVICE
-import com.invoice.contratista.utils.TOTAL
-import com.invoice.contratista.utils.UNIT_NAME
+import com.invoice.contratista.utils.*
 
 @ExperimentalMaterial3Api
 @Composable
 fun PartLazy(
     partEntities: List<Part>,
-    partSelected: (Part) -> Unit
+    partSelected: (Part) -> Unit,
+    addPart: () -> Unit,
 ) = ElevatedCard {
     val typography = MaterialTheme.typography.bodySmall
     LazyColumn(
@@ -38,33 +31,54 @@ fun PartLazy(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = PART,
-                    modifier = Modifier.weight(1f).padding(start = 8.dp, top = 4.dp, bottom = 4.dp),
-                    style = typography
-                )
-                Text(
-                    text = PRODUCT_SERVICE,
-                    modifier = Modifier.weight(2f).padding(top = 4.dp, bottom = 4.dp),
-                    style = typography
-                )
-                Text(
-                    text = "#",
-                    modifier = Modifier.weight(1f).padding(top = 4.dp, bottom = 4.dp),
-                    style = typography
-                )
-                Text(
-                    text = UNIT_NAME,
-                    modifier = Modifier.weight(1f).padding(top = 4.dp, bottom = 4.dp),
-                    style = typography
-                )
-                Text(
-                    text = TOTAL,
-                    modifier = Modifier.weight(2f).padding(end = 8.dp, top = 4.dp, bottom = 4.dp),
-                    style = typography
-                )
+                Row(modifier = Modifier.weight(1f)) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = PART,
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 4.dp),
+                        style = typography
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Row(modifier = Modifier.weight(2f)) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = PRODUCT_SERVICE,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+                        style = typography
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Row(modifier = Modifier.weight(1f)) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "#",
+                        modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+                        style = typography
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Row(modifier = Modifier.weight(1f)) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = UNIT_NAME,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+                        style = typography
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Row(modifier = Modifier.weight(2f)) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = TOTAL,
+                        modifier = Modifier.padding(end = 8.dp, top = 4.dp, bottom = 4.dp),
+                        style = typography
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
+
         items(partEntities.size) {
             val part = partEntities[it]
             val viewModel = PartViewModel()
@@ -99,6 +113,18 @@ fun PartLazy(
                     money = viewModel.total.value,
                     modifierRow = Modifier.weight(2f).padding(end = 8.dp, top = 4.dp, bottom = 4.dp),
                 )
+            }
+        }
+
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth().clickable { addPart.invoke() },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(text = ADD_PART, modifier = Modifier.padding(vertical = 4.dp))
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
     }

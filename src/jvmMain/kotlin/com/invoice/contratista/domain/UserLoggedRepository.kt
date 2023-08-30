@@ -1,7 +1,7 @@
 package com.invoice.contratista.domain
 
 import com.invoice.contratista.data.source.local.UserLogged
-import com.invoice.contratista.data.source.web.models.request.UpdateTokenRequest
+import com.invoice.contratista.data.source.web.models.UpdateTokenRequest
 
 interface UserLoggedRepository {
     fun get(): UserLogged?

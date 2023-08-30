@@ -1,7 +1,7 @@
 package com.invoice.contratista.service
 
-import com.invoice.contratista.data.source.web.models.response.event.BudgetEntity
-import com.invoice.contratista.data.source.web.models.response.event.Part
+import com.invoice.contratista.data.source.web.models.Budget
+import com.invoice.contratista.data.source.web.models.Part
 import com.invoice.contratista.domain.BudgetRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,7 +12,7 @@ class BudgetService(
 ) : SuperService(userService) {
     suspend fun getById(
         id: String,
-        onSuccess: (BudgetEntity) -> Unit,
+        onSuccess: (Budget) -> Unit,
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
         if (isUserLogged) {

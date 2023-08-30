@@ -22,7 +22,7 @@ fun BudgetLazy(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         items(count = eventViewModel.budgetList.value.size) {
-            BudgetData(eventViewModel, budgetEntity = eventViewModel.budgetList.value[it])
+            BudgetData(eventViewModel, budget = eventViewModel.budgetList.value[it])
         }
     }
 }

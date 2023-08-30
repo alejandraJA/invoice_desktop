@@ -1,7 +1,7 @@
 package com.invoice.contratista.service
 
-import com.invoice.contratista.data.source.web.models.response.Availability
-import com.invoice.contratista.data.source.web.models.response.ProductInventoryModel
+import com.invoice.contratista.data.source.web.models.Availability
+import com.invoice.contratista.data.source.web.models.ProductInventory
 import com.invoice.contratista.domain.ProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +13,7 @@ class ProductService(
 
     suspend fun findByProductId(
         productId: String,
-        onSuccess: (ProductInventoryModel) -> Unit,
+        onSuccess: (ProductInventory) -> Unit,
         onError: (String) -> Unit,
     ) = withContext(Dispatchers.IO) {
         if (isUserLogged) {
@@ -22,7 +22,7 @@ class ProductService(
     }
 
     suspend fun getAll(
-        onSuccess: (List<ProductInventoryModel>) -> Unit,
+        onSuccess: (List<ProductInventory>) -> Unit,
         onError: (String) -> Unit
     ) = withContext(Dispatchers.IO) {
         if (isUserLogged) {

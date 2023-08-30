@@ -11,11 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.TaxEntity
+import com.invoice.contratista.data.source.web.models.Tax
 import com.invoice.contratista.utils.LOCAL_TAX
 
 @Composable
-fun TaxLazy(taxEntities: List<TaxEntity>) = LazyVerticalGrid(
+fun TaxLazy(taxEntities: List<Tax>) = LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     verticalArrangement = Arrangement.spacedBy(4.dp),
     horizontalArrangement = Arrangement.spacedBy(4.dp),

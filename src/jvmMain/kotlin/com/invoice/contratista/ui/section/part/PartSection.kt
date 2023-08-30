@@ -10,7 +10,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.invoice.contratista.data.source.web.models.response.event.Part
+import com.invoice.contratista.data.source.web.models.Part
 import com.invoice.contratista.ui.section.product.ProductSection
 
 

@@ -1,7 +1,7 @@
 package com.invoice.contratista.service
 
-import com.invoice.contratista.data.source.web.models.response.event.Part
-import com.invoice.contratista.data.source.web.models.response.event.Reserved
+import com.invoice.contratista.data.source.web.models.Part
+import com.invoice.contratista.data.source.web.models.Reserved
 import com.invoice.contratista.domain.ReservedRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
